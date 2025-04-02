@@ -1,0 +1,41 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "prepare": "husky",
+    "watch-blog": "bun scripts/watch.ts"
+  },
+  "dependencies": {
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/chokidar": "^2.1.7",
+    "@types/markdown-it": "^14.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/tsconfig": "^0.7.0",
+    "chokidar": "^4.0.3",
+    "eslint": "^9.23.0",
+    "eslint-plugin-vue": "^10.0.0",
+    "highlight.js": "^11.11.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^9.2.0",
+    "markdown-it-katex": "^2.0.3",
+    "prettier": "^3.5.3",
+    "sass-embedded": "^1.86.1",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0",
+    "vue-tsc": "^2.2.4"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,json,css,scss,vue,json}": "prettier --write --ignore-unknown"
+  }
+}
