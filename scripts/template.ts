@@ -124,32 +124,16 @@ function generateRoutes() {
 }
 
 const blogRoutes = generateRoutes();
-const importRoutesStr = blogRoutes
-  .map((route) => {
-    const filename = route.component.split("/").pop()?.split(".")[0];
-    return `import ${filename} from "${route.component}"`;
-  })
-  .join("\n");
 
 const routes_arr = blogRoutes
   .map((route) => {
     const filename = route.component.split("/").pop()?.split(".")[0];
-    return {
-      path: `/blog/${filename}`,
-      component: filename,
-    };
-  })
-  .map((route) => {
-    return `  {\n    path: "${route.path}",\n    component: ${route.component}\n  }`;
+    return `  {\n    path: "/blog/${filename}",\n    component: () => import('${route.component}')\n  }`;
   })
   .join(",\n");
 const blogRoutesStr = "export const blogRoutes = [\n" + routes_arr + "\n]";
 
-fs.writeFileSync(
-  "src/router/blogRoutes.ts",
-  importRoutesStr + "\n" + blogRoutesStr,
-  "utf-8",
-);
+fs.writeFileSync("src/router/blogRoutes.ts", blogRoutesStr, "utf-8");
 
 /*******************************
  * 生成元数据
