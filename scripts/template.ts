@@ -105,7 +105,7 @@ const vue = `<template>
       </h1>
       <div class="info">
         <span clas="author">
-          <span class="ele-title">作者：</span>{{ author ?? "无名" }}
+          <span class="ele-title">作者：</span>{{ author || "无名" }}
         </span>
         <span class="create-time">
           <span class="ele-title">创建时间：</span>{{ formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.createTime ?? 0) }}
@@ -140,6 +140,13 @@ utteranc.setAttribute("crossorigin", "anonymous");
 utteranc.setAttribute("async", "true");
 nextTick(() => {
   blog.value?.appendChild(utteranc);
+  // setTimeout(() => {
+  window.mermaid?.initialize({
+    startOnLoad: false,
+    theme: window.theme === "dark" ? "dark" : "default",
+  });
+  window.mermaid?.run();
+  // }, 1000);
 });
 
 const currentBlog = blogs.find((item) => item.component === "@/blogs/${filename}.vue");

@@ -1,6 +1,7 @@
 本博客通过GitHub Actions从[yiktllw.github.io](https://github.com/yiktllw/yiktllw.github.io)仓库自动构建，未采用任何现有博客框架，旨在兼顾Markdown的编写便利性与开发自由度。
 
 技术方案如下：
+
 1. 以Vue为基础框架
 2. 编写TypeScript脚本实现：
    - 核心脚本：将Markdown解析为Vue组件，自动生成路由配置和文章元数据
