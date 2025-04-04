@@ -10,6 +10,7 @@ export const router = createRouter({
   routes,
   scrollBehavior(to, _, savedPosition) {
     if (!to.hash && savedPosition) return savedPosition;
+    if (!to.hash.slice(1)) return { top: 0 };
     return new Promise((resolve, _) => {
       setTimeout(() => {
         resolve({
