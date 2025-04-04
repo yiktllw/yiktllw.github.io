@@ -20,7 +20,6 @@ const runCommand = (filename: string) => {
       console.error(`执行错误: ${error.message}`);
       return;
     }
-    console.log(`执行成功: ${filename}.md -> ${filename}.vue`);
     stdout && console.log(stdout);
     stderr && console.error(stderr);
   });

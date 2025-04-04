@@ -17,6 +17,7 @@
         "eslint": "^9.23.0",
         "eslint-plugin-vue": "^10.0.0",
         "highlight.js": "^11.11.1",
+        "highlightjs-line-numbers.js": "^2.9.0",
         "husky": "^9.1.7",
         "lint-staged": "^15.5.0",
         "markdown-it": "^14.1.0",
@@ -360,6 +361,8 @@
     "he": ["he@1.2.0", "", { "bin": { "he": "bin/he" } }, "sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw=="],
 
     "highlight.js": ["highlight.js@11.11.1", "", {}, "sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w=="],
+
+    "highlightjs-line-numbers.js": ["highlightjs-line-numbers.js@2.9.0", "", {}, "sha512-hMYK5VU+Qi0HmkkdZxamV71ALu9Hq2icQk2WP8OX5q7IPMilSv47ILlJu+fBvxAQdhjW6wONnSQeypsbeRM7WQ=="],
 
     "human-signals": ["human-signals@5.0.0", "", {}, "sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ=="],
 

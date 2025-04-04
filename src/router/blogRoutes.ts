@@ -1,6 +1,6 @@
 export const blogRoutes = [
   {
-    path: "/blog/blog",
-    component: () => import("@/blogs/blog.vue"),
+    path: "/blog/about",
+    component: () => import("@/blogs/about.vue"),
   },
 ];

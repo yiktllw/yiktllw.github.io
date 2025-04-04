@@ -21,11 +21,12 @@ const codeToCopy: string[] = [];
 let copyIndex = 0;
 
 const myHighlight = (str: string, lang: string) => {
+  if (str.endsWith("\n")) str = str.slice(0, -1);
   const before =
     `<pre>` +
-    `<code class="hljs" style="font-family: yiktllw-code">` +
+    `<code class="hljs" style="font-family: yiktllw-code, serif;">` +
     `<div class="copy-button" @click="copyCode(${copyIndex})">` +
-    `<img class="copy-img" :src="copy_svg"/>` +
+    `<img class="copy-img g-icon" :src="copy_svg"/>` +
     `</div>` +
     `<details class="code-details" open="true">` +
     `<summary>${lang}</summary>`;
@@ -35,21 +36,61 @@ const myHighlight = (str: string, lang: string) => {
   codeToCopy[copyIndex] = str;
   copyIndex++;
 
+  let highlighted;
   if (lang && hilightjs.getLanguage(lang)) {
     try {
-      return (
-        before +
-        hilightjs.highlight(str, {
-          language: lang,
-        }).value +
-        after
-      );
+      highlighted = hilightjs.highlight(str, {
+        language: lang,
+      }).value;
     } catch (__) {
       console.error(__);
+      highlighted = md.utils.escapeHtml(str);
     }
   }
 
-  return before + md.utils.escapeHtml(str) + after;
+  const lines = highlighted.split("\n");
+  let output = "";
+  let tagStack: string[] = [];
+  let pendingLines: string[] = [];
+
+  // 改进的标签解析器
+  const parseTags = (line: string) => {
+    const tags = line.match(/<\/?([a-z][^\s/>]*)|(\/>)/gi) || [];
+
+    tags.forEach((token) => {
+      const isClosing = token.startsWith("</");
+      const isSelfClosing = token.endsWith("/>");
+      const tagName = token.match(/[a-z][^\s/>]*/i)?.[0]?.toLowerCase();
+
+      if (isSelfClosing) return; // 忽略自闭合标签
+      if (!tagName) return;
+
+      if (isClosing) {
+        while (tagStack.pop() !== tagName && tagStack.length > 0);
+      } else {
+        tagStack.push(tagName);
+      }
+    });
+  };
+
+  lines.forEach((line, index) => {
+    pendingLines.push(line);
+    parseTags(line);
+
+    // 在以下情况闭合包裹：
+    // 1. 标签栈完全闭合
+    // 2. 最后一行强制闭合
+    if (tagStack.length === 0 || index === lines.length - 1) {
+      const codeBlock = pendingLines.join("\n");
+      output += `<div class="line">${codeBlock}</div>`;
+      pendingLines = [];
+    }
+  });
+
+  codeToCopy[copyIndex] = str;
+  copyIndex++;
+
+  return before + output + after;
 };
 
 md.options.highlight = myHighlight;
@@ -57,12 +98,52 @@ md.options.highlight = myHighlight;
 const blog = fs.readFileSync(`blogs/${filename}.md`, "utf-8");
 const result = md.render(blog);
 const vue = `<template>
-  <div class="blog">
-  ${result}
+  <div class="blog" ref="blog">
+    <div class="blog-info">
+      <h1 class="blog-title">
+        {{ currentBlog?.blogInfo.title ?? "Untitled" }}
+      </h1>
+      <div class="info">
+        <span clas="author">
+          <span class="ele-title">作者：</span>{{ author ?? "无名" }}
+        </span>
+        <span class="create-time">
+          <span class="ele-title">创建时间：</span>{{ formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.createTime ?? 0) }}
+        </span>
+        <span class="last-update">
+          <span class="ele-title">最后修改：</span>{{ formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.lastUpdate ?? 0) }}
+        </span>
+        <span class="copy-right">
+          <span class="ele-title">许可协议：</span><p xmlns:cc="http://creativecommons.org/ns#" ><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC-SA 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt=""></a></p>
+        </span>
+      </div>
+    </div>
+    ${result}
   </div>
 </template>
 <script setup lang="ts">
+import { ref, nextTick } from "vue";
 import copy_svg from "@/assets/svg/copy.svg";
+import blogs from "@/blogs.json";
+import { formatTime_yyyy_mm_dd_hh_mm } from "@/utils/time";
+
+const blog = ref<HTMLElement>();
+const author = import.meta.env.VITE_AUTHOR;
+
+const utteranc = document.createElement("script");
+utteranc.src = "https://utteranc.es/client.js";
+utteranc.setAttribute("repo", import.meta.env.VITE_COMMENT_REPO);
+utteranc.setAttribute("issue-term", "${filename}");
+utteranc.setAttribute("label", "💬comment")
+utteranc.setAttribute("theme", \`github-\${window.theme ?? "dark"}\`);
+utteranc.setAttribute("crossorigin", "anonymous");
+utteranc.setAttribute("async", "true");
+nextTick(() => {
+  blog.value?.appendChild(utteranc);
+});
+
+const currentBlog = blogs.find((item) => item.component === "@/blogs/${filename}.vue");
+document.title = currentBlog?.blogInfo.title ?? "yiktllw的博客";
 
 const codeToCopy = ${JSON.stringify(codeToCopy)};
 const copyCode = (index: number) => {
@@ -72,6 +153,7 @@ const copyCode = (index: number) => {
 </script> `;
 
 fs.writeFileSync(`src/blogs/${filename}.vue`, vue, "utf-8");
+console.log(`✅ 执行成功: ${filename}.md -> ${filename}.vue`);
 
 /*******************************
  * 生成路由配置
