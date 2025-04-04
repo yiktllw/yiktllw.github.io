@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write # 允许 workflow 写入内容到仓库
+      contents: write
 
     steps:
       - name: Checkout code
@@ -25,6 +25,10 @@ jobs:
 
       - name: Build project
         run: bun run build
+
+      - name: Create 404.html
+        run: |
+          cp ./dist/index.html ./dist/404.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
