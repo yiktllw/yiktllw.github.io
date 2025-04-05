@@ -142,7 +142,10 @@
     <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(6)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">bun watch</div></details></code></pre>
     <p><strong>启动开发服务器</strong>（新终端窗口）：</p>
     <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(8)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">bun dev</div></details></code></pre>
-    <p>访问 <code>http://localhost:5173</code> 预览实时效果</p>
+    <p>
+      在脚本自动修改路由配置时，Vite默认的窗口刷新会影响编辑体验，已禁用该特性。若新增了md文件，请在运行服务的终端窗口中按
+      <kbd>r</kbd> + <kbd>Enter</kbd> 手动重启服务，即可预览新文件。
+    </p>
     <p><strong>配置评论系统</strong></p>
     <p>
       安装<a href="https://github.com/apps/utterances">utteranc</a
