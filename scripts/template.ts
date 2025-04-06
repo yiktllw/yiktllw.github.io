@@ -235,6 +235,8 @@ type BlogMeta = {
     title: string;
     createTime: number;
     lastUpdate: number;
+    wordCount: number;
+    readingTime: number;
   };
 };
 
@@ -258,6 +260,9 @@ function mergeMetaData(routes: Array<{ component: string }>) {
   return routes.map((route) => {
     // 查找已有记录
     const existing = existingData.find((m) => m.component === route.component);
+    // 计算字数和阅读时间
+    const path = `blogs/${route.component.split("/").pop()?.split(".")[0]}.md`;
+    const { wordCount, readingTime } = countMarkdownWords(path);
 
     return {
       component: route.component,
@@ -265,6 +270,8 @@ function mergeMetaData(routes: Array<{ component: string }>) {
         title: existing?.blogInfo.title || "", // 保留已有标题或初始化
         createTime: existing?.blogInfo.createTime || now, // 已有值或新时间戳
         lastUpdate: now, // 总是更新最后修改时间
+        wordCount: wordCount,
+        readingTime: readingTime,
       },
     };
   });
@@ -275,3 +282,49 @@ const mergedData = mergeMetaData(blogRoutes);
 fs.writeFileSync(META_FILE, JSON.stringify(mergedData, null, 2), "utf-8");
 
 console.log(`✅ 成功更新 ${mergedData.length} 条元数据到 ${META_FILE}`);
+
+/*******************************
+ * 统计字数
+ *******************************/
+interface StatsResult {
+  wordCount: number;
+  readingTime: number;
+}
+
+function countMarkdownWords(filePath: string): StatsResult {
+  const content = fs.readFileSync(filePath, "utf-8");
+
+  // 清理内容的正则表达式
+  const cleaned = content
+    .replace(/<[\s\S]*?>/g, "") // 移除 HTML 标签
+    .replace(/!\[.*?\]\(.*?\)/g, "") // 移除图片语法
+    .replace(/\[(.*?)\]\(.*?\)/g, "$1") // 保留链接文字，移除 URL
+    .replace(/#{1,6}\s?/g, "") // 移除标题标记
+    .replace(/\*{1,2}(.*?)\*{1,2}/g, "$1") // 移除粗体/斜体标记
+    .replace(/_{1,2}(.*?)_{1,2}/g, "$1") // 移除下划线格式
+    .replace(/`{1,3}(.*?)`{1,3}/g, "$1") // 移除代码块标记
+    .replace(/-{3,}/g, "") // 移除分隔线
+    .replace(/^[*-+] .*/gm, "") // 移除列表标记
+    .replace(/\s+/g, " ") // 合并多个空格
+    .trim();
+
+  // 混合统计逻辑
+  let chineseChars = 0;
+  let englishWords = 0;
+
+  const chineseRegex = /[\u4e00-\u9fa5]/g;
+  const englishWordRegex = /\b[a-zA-Z]+\b/g;
+
+  chineseChars = (cleaned.match(chineseRegex) || []).length;
+  englishWords = (cleaned.match(englishWordRegex) || []).length;
+  const totalCount = chineseChars + englishWords;
+
+  const chineseTime = chineseChars / 300;
+  const englishTime = englishWords / 200;
+  const readingTime = Math.ceil(chineseTime + englishTime);
+
+  return {
+    wordCount: totalCount,
+    readingTime,
+  };
+}

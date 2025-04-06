@@ -138,13 +138,11 @@
     >
       2.启动开发服务
     </h2>
-    <p><strong>启动文件监听</strong>：</p>
+    <p><strong>启动文件监听和开发服务器</strong>：</p>
     <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(6)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">bun watch</div></details></code></pre>
-    <p><strong>启动开发服务器</strong>（新终端窗口）：</p>
-    <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(8)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">bun dev</div></details></code></pre>
     <p>
       在脚本自动修改路由配置时，Vite默认的窗口刷新会影响编辑体验，已禁用该特性。若新增了md文件，请在运行服务的终端窗口中按
-      <kbd>r</kbd> + <kbd>Enter</kbd> 手动重启服务，即可预览新文件。
+      <kbd>r</kbd> + <kbd>Enter</kbd>强制HMR更新，即可预览新文件。
     </p>
     <p><strong>配置评论系统</strong></p>
     <p>
@@ -174,11 +172,11 @@
     <ol>
       <li>
         <p><strong>本地构建预览</strong>：</p>
-        <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(10)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">bun run build  <span class="hljs-comment"># 生成静态文件</span></div><div class="line">bun run preview  <span class="hljs-comment"># 本地预览生产环境效果</span></div></details></code></pre>
+        <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(8)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">bun run build  <span class="hljs-comment"># 生成静态文件</span></div><div class="line">bun run preview  <span class="hljs-comment"># 本地预览生产环境效果</span></div></details></code></pre>
       </li>
       <li>
         <p><strong>部署到 GitHub</strong>：</p>
-        <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(12)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">git add .</div><div class="line">git commit -m <span class="hljs-string">&quot;更新博客内容&quot;</span></div><div class="line">git push origin main</div></details></code></pre>
+        <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(10)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">git add .</div><div class="line">git commit -m <span class="hljs-string">&quot;更新博客内容&quot;</span></div><div class="line">git push origin main</div></details></code></pre>
       </li>
       <li>
         <p>自动部署流程：</p>
@@ -239,8 +237,6 @@ const codeToCopy = [
   "bun install",
   "bun watch",
   "bun watch",
-  "bun dev",
-  "bun dev",
   "bun run build  # 生成静态文件\nbun run preview  # 本地预览生产环境效果",
   "bun run build  # 生成静态文件\nbun run preview  # 本地预览生产环境效果",
   'git add .\ngit commit -m "更新博客内容"\ngit push origin main',
