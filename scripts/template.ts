@@ -235,13 +235,26 @@ fs.writeFileSync("src/router/blogRoutes.ts", blogRoutesStr, "utf-8");
 const META_FILE = "src/blogs.json";
 
 type BlogMeta = {
+  /** 组件路径 */
   component: string;
   blogInfo: {
+    /** 标题 */
     title: string;
+    /** 创建时间 */
     createTime: number;
+    /** 最后修改时间 */
     lastUpdate: number;
+    /** 字数 */
     wordCount: number;
+    /** 预计阅读时间 */
     readingTime: number;
+    /** 分类 */
+    category: string;
+    /** 系列，用于连载 */
+    series: {
+      enable: boolean;
+      name: string;
+    };
   };
 };
 
@@ -279,8 +292,13 @@ function mergeMetaData(routes: Array<{ component: string }>) {
         lastUpdate: now, // 总是更新最后修改时间
         wordCount: wordCount,
         readingTime: readingTime,
+        category: existing?.blogInfo.category || "default", // 默认分类
+        series: {
+          enable: existing?.blogInfo.series.enable || false,
+          name: existing?.blogInfo.series.name || "",
+        },
       },
-    };
+    } as BlogMeta;
   });
 }
 
