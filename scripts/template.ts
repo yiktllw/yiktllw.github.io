@@ -5,7 +5,7 @@ import anchor from "markdown-it-anchor";
 import katex from "markdown-it-katex";
 import hilightjs from "highlight.js";
 import { readdirSync, statSync } from "node:fs";
-import { resolve, relative, parse, join } from "node:path";
+import path, { resolve, relative, parse, join } from "node:path";
 
 /*******************************
  * 生成 Vue 组件
@@ -157,8 +157,13 @@ const copyCode = (index: number) => {
   const code = codeToCopy[index];
   navigator.clipboard.writeText(code);
 }
-</script> `;
+</script>`;
 
+if (!fs.existsSync(`src/blogs/${filename}.vue`)) {
+  fs.mkdirSync(path.parse(`src/blogs/${filename}.vue`).dir, {
+    recursive: true,
+  });
+}
 fs.writeFileSync(`src/blogs/${filename}.vue`, vue, "utf-8");
 console.log(`✅ 执行成功: ${filename}.md -> ${filename}.vue`);
 
@@ -261,7 +266,9 @@ function mergeMetaData(routes: Array<{ component: string }>) {
     // 查找已有记录
     const existing = existingData.find((m) => m.component === route.component);
     // 计算字数和阅读时间
-    const path = `blogs/${route.component.split("/").pop()?.split(".")[0]}.md`;
+    const path =
+      route.component.substring(2, route.component.length - 4) + ".md";
+    console.log(path);
     const { wordCount, readingTime } = countMarkdownWords(path);
 
     return {
