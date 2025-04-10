@@ -1,0 +1,21 @@
+@font-face {
+  font-family: "fab";
+  src: url(./fa-brands-400.woff2) format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: "far";
+  src: url(./fa-regular-400.woff2) format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: "fas";
+  src: url(./fa-solid-900.woff2) format("woff2");
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+}
