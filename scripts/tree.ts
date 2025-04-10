@@ -24,6 +24,75 @@ export const listFiles = async (WATCH_PATH: string) => {
   }
 };
 
+export function listFilesByExtension(
+  watchPath: string,
+  extensions?: string | string[],
+): string[] {
+  const result: string[] = [];
+  let extList: string[] | null = null;
+
+  // 处理扩展名参数
+  if (extensions !== undefined) {
+    const normalizeExt = (ext: string) =>
+      ext.startsWith(".") ? ext.toLowerCase() : `.${ext.toLowerCase()}`;
+
+    extList = Array.isArray(extensions)
+      ? extensions.map(normalizeExt)
+      : [normalizeExt(extensions)];
+  }
+
+  // 递归遍历目录
+  function traverse(currentDir: string) {
+    const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const fullPath = path.join(currentDir, entry.name);
+
+      if (entry.isDirectory()) {
+        traverse(fullPath);
+      } else if (entry.isFile()) {
+        if (extList === null) {
+          // 未指定扩展名时包含所有文件
+          const relativePath = path.relative(watchPath, fullPath);
+          result.push(relativePath);
+        } else {
+          const fileExt = path.extname(entry.name).toLowerCase();
+          if (extList.includes(fileExt)) {
+            const relativePath = path.relative(watchPath, fullPath);
+            result.push(relativePath);
+          }
+        }
+      }
+    }
+  }
+
+  traverse(watchPath);
+  return result;
+}
+
+// 函数2: 获取目录下所有子目录的相对路径
+export function listSubdirectories(watchPath: string): string[] {
+  const result: string[] = [];
+
+  // 递归遍历目录
+  function traverse(currentDir: string) {
+    const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        const fullPath = path.join(currentDir, entry.name);
+        const relativePath = path.relative(watchPath, fullPath);
+
+        result.push(relativePath); // 添加当前目录路径
+        traverse(fullPath); // 递归遍历子目录
+      }
+    }
+  }
+
+  traverse(watchPath);
+  return result;
+}
+
 const processDirectory = async (dirPath: string, prefix: string) => {
   try {
     const files = await fs.promises.readdir(dirPath);

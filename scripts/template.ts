@@ -6,6 +6,39 @@ import katex from "markdown-it-katex";
 import hilightjs from "highlight.js";
 import { readdirSync, statSync } from "node:fs";
 import path, { resolve, relative, parse, join } from "node:path";
+import { colors, colorize } from "./color";
+
+const startTime = Date.now();
+
+hilightjs.registerLanguage("vue", (hljs) => {
+  return {
+    name: "Vue",
+    subLanguage: "xml", // 基础语言使用HTML
+    contains: [
+      {
+        begin: /<script(\s*lang\s*=\s*['"]?(ts|typescript)['"]?)?\s*>/,
+        end: /<\/script>/,
+        subLanguage: "javascript",
+        excludeBegin: true,
+        excludeEnd: true,
+      },
+      {
+        begin: /<style(\s*lang\s*=\s*['"]?(scss|sass|less|stylus)['"]?)?\s*>/,
+        end: /<\/style>/,
+        subLanguage: "css",
+        excludeBegin: true,
+        excludeEnd: true,
+      },
+      {
+        begin: /<template>/,
+        end: /<\/template>/,
+        subLanguage: "xml",
+        excludeBegin: true,
+        excludeEnd: true,
+      },
+    ],
+  };
+});
 
 /*******************************
  * 生成 Vue 组件
@@ -42,13 +75,18 @@ const myHighlight = (str: string, lang: string) => {
       highlighted = hilightjs.highlight(str, {
         language: lang,
       }).value;
+      if (lang.toLowerCase() === "vue") {
+        highlighted = highlighted
+          .replace(/\{\{/g, "&lbrace;&lbrace;")
+          .replace(/\}\}/g, "&rbrace;&rbrace;");
+      }
     } catch (__) {
       console.error(__);
       highlighted = md.utils.escapeHtml(str);
     }
   }
 
-  const lines = highlighted.split("\n");
+  const lines: string[] = highlighted.split("\n");
   let output = "";
   let tagStack: string[] = [];
   let pendingLines: string[] = [];
@@ -93,7 +131,28 @@ const myHighlight = (str: string, lang: string) => {
   return before + output + after;
 };
 
-md.options.highlight = myHighlight;
+const hljs = (str: string, lang: string) => {
+  codeToCopy[copyIndex] = str;
+  let result = hilightjs.highlight(str, { language: lang }).value;
+  if (lang.toLowerCase() === "vue") {
+    result = result
+      .replace(/\{\{/g, "&lbrace;&lbrace;")
+      .replace(/\}\}/g, "&rbrace;&rbrace;");
+  }
+  const lineCount = (result.match(/\n/g) || []).length;
+  // side effect
+  const beforeTemplate =
+    `<pre><code :data-open="codeOpen[${copyIndex}]" class="hljs language-${lang}" style="font-family: yiktllw-code, serif; position: relative;">` +
+    `<div class="line-numbers"><span v-for="i in ${lineCount}">{{ i }}</span></div>` +
+    `<div class="top-line"><div @click="toggleCodeOpen(${copyIndex})" class="language">${lang}</div><div class="copy-button" @click="copyCode(${copyIndex})"><img class="copy-img" :src="copy_svg"/></div></div>` +
+    `<div class="code">`;
+  const afterTemplate = `</div></code></pre>`;
+
+  copyIndex++;
+  return beforeTemplate + result + afterTemplate;
+};
+
+md.options.highlight = hljs;
 
 const blog = fs.readFileSync(`blogs/${filename}.md`, "utf-8");
 const result = md.render(blog);
@@ -112,6 +171,15 @@ const vue = `<template>
         </span>
         <span class="last-update">
           <span class="ele-title">最后修改：</span>{{ formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.lastUpdate ?? 0) }}
+        </span>
+        <span class="reading-time">
+          <span class="ele-title">预计花费：</span>{{ currentBlog?.blogInfo.readingTime }}分钟
+        </span>
+        <span class="category" v-if="currentBlog?.blogInfo.category !== 'default'">
+          <span class="ele-title">分类：</span>{{ currentBlog?.blogInfo.category }}
+        </span>
+        <span class="series" v-if="currentBlog?.blogInfo.series.enable">
+          <span class="ele-title">系列：</span>{{ currentBlog?.blogInfo.series.name }}
         </span>
         <span class="copy-right">
           <span class="ele-title">许可协议：</span><p xmlns:cc="http://creativecommons.org/ns#" ><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC-SA 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt=""></a></p>
@@ -156,6 +224,13 @@ const codeToCopy = ${JSON.stringify(codeToCopy)};
 const copyCode = (index: number) => {
   const code = codeToCopy[index];
   navigator.clipboard.writeText(code);
+}
+
+const codeOpen = ref<boolean[]>([
+  ${codeToCopy.map((_) => `true`).join(",")}
+]);
+const toggleCodeOpen = (index: number) => {
+  codeOpen.value[index] = !codeOpen.value[index];
 }
 </script>`;
 
@@ -276,6 +351,9 @@ function mergeMetaData(routes: Array<{ component: string }>) {
   const existingData = getMetaData();
 
   return routes.map((route) => {
+    const isCurrent =
+      filename === route.component.slice(8, -4) ||
+      filename === route.component.slice(8, -4) + ".md";
     // 查找已有记录
     const existing = existingData.find((m) => m.component === route.component);
     // 计算字数和阅读时间
@@ -289,7 +367,7 @@ function mergeMetaData(routes: Array<{ component: string }>) {
       blogInfo: {
         title: existing?.blogInfo.title || "", // 保留已有标题或初始化
         createTime: existing?.blogInfo.createTime || now, // 已有值或新时间戳
-        lastUpdate: now, // 总是更新最后修改时间
+        lastUpdate: isCurrent ? now : existing?.blogInfo.lastUpdate,
         wordCount: wordCount,
         readingTime: readingTime,
         category: existing?.blogInfo.category || "default", // 默认分类
@@ -353,3 +431,7 @@ function countMarkdownWords(filePath: string): StatsResult {
     readingTime,
   };
 }
+
+const endTime = Date.now();
+const duration = endTime - startTime;
+console.warn(colorize("🕒 执行时间: " + duration + "毫秒", colors.fg.yellow));

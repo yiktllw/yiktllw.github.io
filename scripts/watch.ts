@@ -6,9 +6,19 @@ import readline from "readline";
 import { startServer as startVite } from "./vite";
 import { colorize, colors } from "./color";
 import { listFiles } from "./tree";
+import { completer as _completer } from "./completer";
 
 // 监听路径配置
 const WATCH_PATH = "blogs/";
+
+const completer = (line: string) => {
+  return _completer(line, WATCH_PATH);
+};
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  completer: completer,
+});
 
 function debounce<F extends (...args: any[]) => void>(fn: F, delay = 500) {
   let timeout: NodeJS.Timeout;
@@ -45,11 +55,6 @@ const watcher = chokidar.watch(WATCH_PATH, {
   },
 });
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
 const showMiniHelp = () => {
   console.log(colorize(`按h键显示帮助信息`, colors.fg.green));
 };
@@ -62,7 +67,7 @@ const showHelp = () => {
 ${colorize("h", colors.fg.green)}    - 显示帮助信息
 ${colorize("ls", colors.fg.green)}   - 列出所有监听文件
 ${colorize("new <path/to/filename.md>", colors.fg.green)} - 创建新md文件
-${colorize("r <filename>", colors.fg.green)} - 手动触发md文件处理
+${colorize("r <path/to/filename.md>", colors.fg.green)} - 手动触发md文件处理
 ${colorize("c", colors.fg.green)}    - 清空控制台
 ${colorize("q", colors.fg.green)}    - 退出程序
 `,
