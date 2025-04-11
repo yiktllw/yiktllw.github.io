@@ -5,20 +5,32 @@
         {{ currentBlog?.blogInfo.title ?? "Untitled" }}
       </h1>
       <div class="info">
-        <span clas="author">
-          <span class="ele-title">作者：</span>{{ author || "无名" }}
-        </span>
         <span class="create-time">
-          <span class="ele-title">创建时间：</span
+          <span class="ele-title">发布于：</span
           >{{
             formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.createTime ?? 0)
           }}
         </span>
         <span class="last-update">
-          <span class="ele-title">最后修改：</span
+          <span class="ele-title">修改于：</span
           >{{
             formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.lastUpdate ?? 0)
           }}
+        </span>
+        <span class="reading-time">
+          <span class="ele-title">阅读时长：</span
+          >{{ currentBlog?.blogInfo.readingTime }}分钟
+        </span>
+        <span
+          class="category"
+          v-if="currentBlog?.blogInfo.category !== 'default'"
+        >
+          <span class="ele-title">分类：</span
+          >{{ currentBlog?.blogInfo.category }}
+        </span>
+        <span class="series" v-if="currentBlog?.blogInfo.series.enable">
+          <span class="ele-title">系列：</span
+          >{{ currentBlog?.blogInfo.series.name }}
         </span>
         <span class="copy-right">
           <span class="ele-title">许可协议：</span>
@@ -109,7 +121,8 @@
           <li>Fork 本项目到你的 GitHub 账户</li>
           <li>
             将项目源码克隆到本地：
-            <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(0)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">git <span class="hljs-built_in">clone</span> https://github.com/你的用户名/仓库名.git</div></details></code></pre>
+            <pre><code :data-open="codeOpen[0]" class="hljs language-bash" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 1">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(0)" class="language">bash</div><div class="copy-button" @click="copyCode(0)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code">git <span class="hljs-built_in">clone</span> https://github.com/你的用户名/仓库名.git
+</div></code></pre>
           </li>
         </ul>
       </li>
@@ -123,13 +136,15 @@
           </li>
           <li>
             安装 Vite 构建工具：
-            <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(2)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">bun add -g vite</div></details></code></pre>
+            <pre><code :data-open="codeOpen[1]" class="hljs language-bash" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 1">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(1)" class="language">bash</div><div class="copy-button" @click="copyCode(1)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code">bun add -g vite
+</div></code></pre>
           </li>
         </ul>
       </li>
       <li>
         <p><strong>安装依赖</strong></p>
-        <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(4)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">bun install</div></details></code></pre>
+        <pre><code :data-open="codeOpen[2]" class="hljs language-bash" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 1">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(2)" class="language">bash</div><div class="copy-button" @click="copyCode(2)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code">bun install
+</div></code></pre>
       </li>
     </ol>
     <h2
@@ -139,7 +154,8 @@
       2.启动开发服务
     </h2>
     <p><strong>启动文件监听和开发服务器</strong>：</p>
-    <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(6)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">bun watch</div></details></code></pre>
+    <pre><code :data-open="codeOpen[3]" class="hljs language-bash" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 1">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(3)" class="language">bash</div><div class="copy-button" @click="copyCode(3)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code">bun watch
+</div></code></pre>
     <p>
       在脚本自动修改路由配置时，Vite默认的窗口刷新会影响编辑体验，已禁用该特性。若新增了md文件，请在运行服务的终端窗口中按
       <kbd>r</kbd> + <kbd>Enter</kbd>强制HMR更新，即可预览新文件。
@@ -172,11 +188,16 @@
     <ol>
       <li>
         <p><strong>本地构建预览</strong>：</p>
-        <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(8)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">bun run build  <span class="hljs-comment"># 生成静态文件</span></div><div class="line">bun run preview  <span class="hljs-comment"># 本地预览生产环境效果</span></div></details></code></pre>
+        <pre><code :data-open="codeOpen[4]" class="hljs language-bash" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 2">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(4)" class="language">bash</div><div class="copy-button" @click="copyCode(4)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code">bun run build  <span class="hljs-comment"># 生成静态文件</span>
+bun run preview  <span class="hljs-comment"># 本地预览生产环境效果</span>
+</div></code></pre>
       </li>
       <li>
         <p><strong>部署到 GitHub</strong>：</p>
-        <pre><code class="hljs" style="font-family: yiktllw-code, serif;"><div class="copy-button" @click="copyCode(10)"><img class="copy-img g-icon" :src="copy_svg"/></div><details class="code-details" open="true"><summary>bash</summary><div class="line">git add .</div><div class="line">git commit -m <span class="hljs-string">&quot;更新博客内容&quot;</span></div><div class="line">git push origin main</div></details></code></pre>
+        <pre><code :data-open="codeOpen[5]" class="hljs language-bash" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 3">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(5)" class="language">bash</div><div class="copy-button" @click="copyCode(5)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code">git add .
+git commit -m <span class="hljs-string">&quot;更新博客内容&quot;</span>
+git push origin main
+</div></code></pre>
       </li>
       <li>
         <p>自动部署流程：</p>
@@ -202,7 +223,6 @@ import blogs from "@/blogs.json";
 import { formatTime_yyyy_mm_dd_hh_mm } from "@/utils/time";
 
 const blog = ref<HTMLElement>();
-const author = import.meta.env.VITE_AUTHOR;
 
 const utteranc = document.createElement("script");
 utteranc.src = "https://utteranc.es/client.js";
@@ -229,21 +249,20 @@ const currentBlog = blogs.find(
 document.title = currentBlog?.blogInfo.title ?? "yiktllw的博客";
 
 const codeToCopy = [
-  "git clone https://github.com/你的用户名/仓库名.git",
-  "git clone https://github.com/你的用户名/仓库名.git",
-  "bun add -g vite",
-  "bun add -g vite",
-  "bun install",
-  "bun install",
-  "bun watch",
-  "bun watch",
-  "bun run build  # 生成静态文件\nbun run preview  # 本地预览生产环境效果",
-  "bun run build  # 生成静态文件\nbun run preview  # 本地预览生产环境效果",
-  'git add .\ngit commit -m "更新博客内容"\ngit push origin main',
-  'git add .\ngit commit -m "更新博客内容"\ngit push origin main',
+  "git clone https://github.com/你的用户名/仓库名.git\n",
+  "bun add -g vite\n",
+  "bun install\n",
+  "bun watch\n",
+  "bun run build  # 生成静态文件\nbun run preview  # 本地预览生产环境效果\n",
+  'git add .\ngit commit -m "更新博客内容"\ngit push origin main\n',
 ];
 const copyCode = (index: number) => {
   const code = codeToCopy[index];
   navigator.clipboard.writeText(code);
+};
+
+const codeOpen = ref<boolean[]>([true, true, true, true, true, true]);
+const toggleCodeOpen = (index: number) => {
+  codeOpen.value[index] = !codeOpen.value[index];
 };
 </script>
