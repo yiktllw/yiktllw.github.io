@@ -1,7 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
-
-import HomeView from "@/views/HomeView.vue";
 import { blogRoutes } from "./blogRoutes";
+import Nprogress from "nprogress";
+import HomeView from "@/views/HomeView.vue";
 
 const routes = [{ path: "/", component: HomeView }, ...blogRoutes];
 
@@ -20,4 +20,15 @@ export const router = createRouter({
       }, 1);
     });
   },
+});
+
+router.beforeEach((_to, _from, next) => {
+  Nprogress.start();
+  next();
+});
+router.afterEach(() => {
+  Nprogress.done();
+});
+router.onError(() => {
+  Nprogress.done();
 });
