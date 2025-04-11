@@ -35,3 +35,13 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+
+      - name: Setup aliyun oss
+        uses: manyuanrong/setup-ossutil@v1.0
+        with:
+          endpoint: "oss-cn-hongkong.aliyuncs.com" 
+          access-key-id: ${{ secrets.OSS_ID }}
+          access-key-secret: ${{ secrets.OSS_SECRET }}
+
+      - name: Deploy docs
+        run: ossutil cp -rf ./dist oss://yikt-net/

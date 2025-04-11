@@ -178,6 +178,7 @@ watcher
     const relativePath = path.relative(blogsDir, filePath);
     const parsed = path.parse(relativePath);
     const filename = path.join(parsed.dir, parsed.name);
+    console.log(filePath);
 
     debouncedRun(filename);
   })

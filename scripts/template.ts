@@ -1,6 +1,7 @@
 const args = process.argv.slice(2);
 import fs from "fs";
 import markdownit from "markdown-it";
+import footnote from "markdown-it-footnote";
 import anchor from "markdown-it-anchor";
 import katex from "markdown-it-katex";
 import hilightjs from "highlight.js";
@@ -48,7 +49,7 @@ const filename = args[0] || process.exit(1);
 const md = markdownit({
   html: true,
 });
-md.use(anchor).use(katex);
+md.use(anchor).use(katex).use(footnote);
 
 const codeToCopy: string[] = [];
 let copyIndex = 0;
