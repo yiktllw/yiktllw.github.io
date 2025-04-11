@@ -37,7 +37,7 @@ jobs:
           publish_dir: ./dist
 
       - name: Setup aliyun oss
-        uses: manyuanrong/setup-ossutil@v1.0
+        uses: manyuanrong/setup-ossutil@v3.0
         with:
           endpoint: "oss-cn-hongkong.aliyuncs.com" 
           access-key-id: ${{ secrets.OSS_ID }}
