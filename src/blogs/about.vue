@@ -103,8 +103,6 @@
       </ol>
       <p><strong>以下为使用本项目构建个人博客的过程。</strong></p>
       <h2 id="%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C" tabindex="-1">准备工作</h2>
-      <h3 id="aa" tabindex="-1">aa</h3>
-      <h3 id="bbb" tabindex="-1">bbb</h3>
       <ol>
         <li>
           <p><strong>克隆仓库</strong></p>
@@ -145,7 +143,6 @@
         启动开发服务
       </h2>
       <p><strong>启动文件监听和开发服务器</strong>：</p>
-      <h3 id="ccc" tabindex="-1">ccc</h3>
       <pre><code :data-open="codeOpen[3]" class="hljs language-bash" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 1">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(3)" class="language">&lt;BASH&gt;</div><div class="copy-button" @click="copyCode(3)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code">bun watch
 </div></code></pre>
       <p>
@@ -221,57 +218,32 @@ git push origin main
                 :class="0 === current_heading ? 'active' : 'not-active'"
                 >1&nbsp;准备工作</a
               >
-              <ul class="depth-1">
-                <li>
-                  <a
-                    href="#aa"
-                    :class="1 === current_heading ? 'active' : 'not-active'"
-                    >1.1&nbsp;aa</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#bbb"
-                    :class="2 === current_heading ? 'active' : 'not-active'"
-                    >1.2&nbsp;bbb</a
-                  >
-                </li>
-              </ul>
             </li>
             <li>
               <a
                 href="#%E5%90%AF%E5%8A%A8%E5%BC%80%E5%8F%91%E6%9C%8D%E5%8A%A1"
-                :class="3 === current_heading ? 'active' : 'not-active'"
+                :class="1 === current_heading ? 'active' : 'not-active'"
                 >2&nbsp;启动开发服务</a
               >
-              <ul class="depth-1">
-                <li>
-                  <a
-                    href="#ccc"
-                    :class="4 === current_heading ? 'active' : 'not-active'"
-                    >2.1&nbsp;ccc</a
-                  >
-                </li>
-              </ul>
             </li>
             <li>
               <a
                 href="#%E7%BC%96%E5%86%99%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0"
-                :class="5 === current_heading ? 'active' : 'not-active'"
+                :class="2 === current_heading ? 'active' : 'not-active'"
                 >3&nbsp;编写博客文章</a
               >
             </li>
             <li>
               <a
                 href="#%E5%8F%91%E5%B8%83%E5%88%B0-github-pages"
-                :class="6 === current_heading ? 'active' : 'not-active'"
+                :class="3 === current_heading ? 'active' : 'not-active'"
                 >4&nbsp;发布到 GitHub Pages</a
               >
             </li>
             <li>
               <a
                 href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"
-                :class="7 === current_heading ? 'active' : 'not-active'"
+                :class="4 === current_heading ? 'active' : 'not-active'"
                 >5&nbsp;注意事项</a
               >
             </li>
