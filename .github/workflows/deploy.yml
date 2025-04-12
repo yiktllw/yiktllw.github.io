@@ -42,6 +42,9 @@ jobs:
           endpoint: "oss-cn-hongkong.aliyuncs.com" 
           access-key-id: ${{ secrets.OSS_ID }}
           access-key-secret: ${{ secrets.OSS_SECRET }}
+          
+      - name: Clean OSS Bucket
+        run: ossutil rm oss://yikt-net/ -r -f
 
       - name: Deploy docs
         run: ossutil cp -rf ./dist oss://yikt-net/
