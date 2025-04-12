@@ -1,24 +1,19 @@
-本博客通过GitHub Actions从[yiktllw.github.io](https://github.com/yiktllw/yiktllw.github.io)仓库自动构建，未采用任何现有博客框架，旨在兼顾Markdown的编写便利性与开发自由度。
+本博客通过 GitHub Actions 从 [yiktllw.github.io](https://github.com/yiktllw/yiktllw.github.io) 仓库自动构建，未采用任何现有博客框架，旨在兼顾 Markdown 的编写便利性与开发自由度。
 
 技术方案如下：
 
-1. 以Vue为基础框架
-2. 编写TypeScript脚本实现：
-   - 核心脚本：将Markdown解析为Vue组件，自动生成路由配置和文章元数据
-   - 辅助脚本：实时监听Markdown文件变更并同步更新Vue文件，支持开发热更新
-3. 通过GitHub Actions实现自动化部署
+1. 以 Vue 为基础框架
+2. 编写 TypeScript 脚本实现：
+   - 核心脚本：将 Markdown 解析为 Vue 组件，自动生成路由配置和文章元数据
+   - 辅助脚本：实时监听 Markdown 文件变更并同步更新 Vue 文件，支持开发热更新
+3. 通过 GitHub Actions 实现自动化部署
 
 **以下为使用本项目构建个人博客的过程。**
 
-## 目录
+## 准备工作
+### aa
 
-[1. 准备工作](#1.准备工作)<br>
-[2. 启动开发服务](#2.启动开发服务)<br>
-[3. 编写博客文章](#3.编写博客文章)<br>
-[4. 发布到GitHub Pages](#4.发布到-github-pages)<br>
-[5. 注意事项](#注意事项)
-
-## 1.准备工作
+### bbb
 
 1. **克隆仓库**
 
@@ -41,20 +36,22 @@
    bun install
    ```
 
-## 2.启动开发服务
+## 启动开发服务
 
 **启动文件监听和开发服务器**：
+
+### ccc
 
 ```bash
 bun watch
 ```
-在脚本自动修改路由配置时，Vite默认的窗口刷新会影响编辑体验，已禁用该特性。若新增了md文件，请在运行服务的终端窗口中按 <kbd>r</kbd> + <kbd>Enter</kbd>强制HMR更新，即可预览新文件。
+在脚本自动修改路由配置时，Vite 默认的窗口刷新会影响编辑体验，已禁用该特性。若新增了 md 文件，请在运行服务的终端窗口中按 <kbd>r</kbd> + <kbd>Enter</kbd> 强制 HMR 更新，即可预览新文件。
 
 **配置评论系统**
 
-安装[utteranc](https://github.com/apps/utterances)到fork的仓库，并修改项目根目录的`.env`文件中对应的信息。
+安装 [utteranc](https://github.com/apps/utterances) 到 fork 的仓库，并修改项目根目录的 `.env` 文件中对应的信息。
 
-## 3.编写博客文章
+## 编写博客文章
 
 1. 在项目根目录的 `/blogs` 文件夹中新建 Markdown 文件
 2. 系统会自动完成：
@@ -62,7 +59,7 @@ bun watch
    - 自动注册路由 `/blog/文件名`
 3. 编辑 `/src/blogs.json` 配置文章标题
 
-## 4.发布到 GitHub Pages
+## 发布到 GitHub Pages
 
 1. **本地构建预览**：
 

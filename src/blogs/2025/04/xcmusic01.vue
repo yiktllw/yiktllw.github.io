@@ -1,108 +1,112 @@
 <template>
-  <div class="blog" ref="blog">
-    <div class="blog-info">
-      <h1 class="blog-title">
-        {{ currentBlog?.blogInfo.title ?? "Untitled" }}
-      </h1>
-      <div class="info">
-        <span class="create-time">
-          <span class="ele-title">发布于：</span
-          >{{
-            formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.createTime ?? 0)
-          }}
-        </span>
-        <span class="last-update">
-          <span class="ele-title">修改于：</span
-          >{{
-            formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.lastUpdate ?? 0)
-          }}
-        </span>
-        <span class="reading-time">
-          <span class="ele-title">阅读时长：</span
-          >{{ currentBlog?.blogInfo.readingTime }}分钟
-        </span>
-        <span
-          class="category"
-          v-if="currentBlog?.blogInfo.category !== 'default'"
-        >
-          <span class="ele-title">分类：</span
-          >{{ currentBlog?.blogInfo.category }}
-        </span>
-        <span class="series" v-if="currentBlog?.blogInfo.series.enable">
-          <span class="ele-title">系列：</span
-          >{{ currentBlog?.blogInfo.series.name }}
-        </span>
-        <span class="copy-right">
-          <span class="ele-title">许可协议：</span>
-          <p xmlns:cc="http://creativecommons.org/ns#">
-            <a
-              href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1"
-              target="_blank"
-              rel="license noopener noreferrer"
-              style="display: inline-block"
-              >CC BY-NC-SA 4.0<img
-                style="
-                  height: 22px !important;
-                  margin-left: 3px;
-                  vertical-align: text-bottom;
-                "
-                src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
-                alt="" /><img
-                style="
-                  height: 22px !important;
-                  margin-left: 3px;
-                  vertical-align: text-bottom;
-                "
-                src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"
-                alt="" /><img
-                style="
-                  height: 22px !important;
-                  margin-left: 3px;
-                  vertical-align: text-bottom;
-                "
-                src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1"
-                alt="" /><img
-                style="
-                  height: 22px !important;
-                  margin-left: 3px;
-                  vertical-align: text-bottom;
-                "
-                src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"
-                alt=""
-            /></a>
-          </p>
-        </span>
+  <div class="blog-container" ref="container">
+    <div class="blog" ref="blog">
+      <div class="blog-info">
+        <h1 class="blog-title">
+          {{ currentBlog?.blogInfo.title ?? "Untitled" }}
+        </h1>
+        <div class="info">
+          <span class="create-time">
+            <span class="ele-title">发布于：</span
+            >{{
+              formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.createTime ?? 0)
+            }}
+          </span>
+          <span class="last-update">
+            <span class="ele-title">修改于：</span
+            >{{
+              formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.lastUpdate ?? 0)
+            }}
+          </span>
+          <span class="reading-time">
+            <span class="ele-title">阅读时长：</span
+            >{{ currentBlog?.blogInfo.readingTime }}分钟
+          </span>
+          <span
+            class="category"
+            v-if="currentBlog?.blogInfo.category !== 'default'"
+          >
+            <span class="ele-title">分类：</span
+            >{{ currentBlog?.blogInfo.category }}
+          </span>
+          <span class="series" v-if="currentBlog?.blogInfo.series.enable">
+            <span class="ele-title">系列：</span
+            >{{ currentBlog?.blogInfo.series.name }}
+          </span>
+          <span class="copy-right">
+            <span class="ele-title">许可协议：</span>
+            <p xmlns:cc="http://creativecommons.org/ns#">
+              <a
+                href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1"
+                target="_blank"
+                rel="license noopener noreferrer"
+                style="display: inline-block"
+                >CC BY-NC-SA 4.0<img
+                  style="
+                    height: 22px !important;
+                    margin-left: 3px;
+                    vertical-align: text-bottom;
+                  "
+                  src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
+                  alt="" /><img
+                  style="
+                    height: 22px !important;
+                    margin-left: 3px;
+                    vertical-align: text-bottom;
+                  "
+                  src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"
+                  alt="" /><img
+                  style="
+                    height: 22px !important;
+                    margin-left: 3px;
+                    vertical-align: text-bottom;
+                  "
+                  src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1"
+                  alt="" /><img
+                  style="
+                    height: 22px !important;
+                    margin-left: 3px;
+                    vertical-align: text-bottom;
+                  "
+                  src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"
+                  alt=""
+              /></a>
+            </p>
+          </span>
+        </div>
       </div>
-    </div>
-    <p>
-      网易云音乐的歌词api返回的歌词类型有两种：逐行歌词（lrc）和逐字歌词（yrc）。
-    </p>
-    <h2 id="%E7%9B%AE%E6%A0%87" tabindex="-1">目标</h2>
-    <p>需要实现的歌词动画包括：</p>
-    <ol>
-      <li>滚动动画：平滑滚动到当前行</li>
-      <li>缩放动画：当前行的缩放从1.0缓变为1.3，上一行反向变化</li>
-      <li>逐字歌词动画：从左到右的剪切效果</li>
-    </ol>
-    <p>逐行歌词可视为逐字歌词的特例：即动画长度为0的逐字歌词。</p>
-    <h2
-      id="%E5%88%9D%E4%BB%A3%E6%96%B9%E6%A1%88%EF%BC%9A%E5%9F%BA%E4%BA%8Ecss%E5%8A%A8%E7%94%BB%E7%9A%84%E5%AE%9E%E7%8E%B0"
-      tabindex="-1"
-    >
-      初代方案：基于CSS动画的实现
-    </h2>
-    <p>
-      初版应用于XCMusic
-      <a href="https://github.com/yiktllw/XCMusic/releases/tag/0.2.4">0.2.4</a
-      >及之前版本。
-    </p>
-    <p>主要原理是：</p>
-    <ol>
-      <li>用<code>requestAnimationFrame</code>计算滚动动画位置</li>
-      <li>CSS动画处理缩放效果；</li>
-      <li><code>clip-path</code>实现逐字动画，动画时长对应歌词时间</li>
-    </ol>
-    <pre><code :data-open="codeOpen[0]" class="hljs language-vue" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 15">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(0)" class="language">vue</div><div class="copy-button" @click="copyCode(0)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code"><span class="language-xml"><span class="hljs-comment">&lt;!-- 逐字歌词动画 --&gt;</span>
+      <p>
+        网易云音乐的歌词 api
+        返回的歌词类型有两种：逐行歌词（lrc）和逐字歌词（yrc）。
+      </p>
+      <h2 id="%E7%9B%AE%E6%A0%87" tabindex="-1">目标</h2>
+      <p>需要实现的歌词动画包括：</p>
+      <ol>
+        <li>滚动动画：平滑滚动到当前行</li>
+        <li>缩放动画：当前行的缩放从 1.0 缓变为 1.3，上一行反向变化</li>
+        <li>逐字歌词动画：从左到右的剪切效果</li>
+      </ol>
+      <p>逐行歌词可视为逐字歌词的特例：即动画长度为 0 的逐字歌词。</p>
+      <h2
+        id="%E5%88%9D%E4%BB%A3%E6%96%B9%E6%A1%88%EF%BC%9A%E5%9F%BA%E4%BA%8E-css-%E5%8A%A8%E7%94%BB%E7%9A%84%E5%AE%9E%E7%8E%B0"
+        tabindex="-1"
+      >
+        初代方案：基于 CSS 动画的实现
+      </h2>
+      <p>
+        初版应用于 XCMusic
+        <a href="https://github.com/yiktllw/XCMusic/releases/tag/0.2.4"
+          >0.2.4</a
+        >
+        及之前版本。
+      </p>
+      <p>主要原理是：</p>
+      <ol>
+        <li>用 <code>requestAnimationFrame</code> 计算滚动动画位置</li>
+        <li>CSS 动画处理缩放效果；</li>
+        <li><code>clip-path</code> 实现逐字动画，动画时长对应歌词时间</li>
+      </ol>
+      <pre><code :data-open="codeOpen[0]" class="hljs language-vue" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 15">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(0)" class="language">&lt;VUE&gt;</div><div class="copy-button" @click="copyCode(0)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code"><span class="language-xml"><span class="hljs-comment">&lt;!-- 逐字歌词动画 --&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">span</span>
   <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item-white font-color-main&quot;</span>
   <span class="hljs-attr">:style</span>=<span class="hljs-string">&quot;{
@@ -118,96 +122,107 @@
   &lbrace;&lbrace; word.text &rbrace;&rbrace;
 <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
 </span></div></code></pre>
-    <h2
-      id="%E4%BA%8C%E4%BB%A3%E6%96%B9%E6%A1%88%EF%BC%9A%E4%BD%BF%E7%94%A8canvas%E7%BB%98%E5%88%B6%E6%AD%8C%E8%AF%8D"
-      tabindex="-1"
-    >
-      二代方案：使用Canvas绘制歌词
-    </h2>
-    <p>
-      应用于XCMusic
-      <a href="https://github.com/yiktllw/XCMusic/releases/tag/0.2.5">0.2.5</a
-      >至<a href="https://github.com/yiktllw/XCMusic/releases/tag/0.3.0"
-        >0.3.0</a
-      >版本。
-    </p>
-    <p>在第一版歌词中，我发现其存在诸多不便利性：</p>
-    <ol>
-      <li>CSS动画无法暂停</li>
-      <li>过多的dom元素导致的内存占用问题</li>
-      <li>CSS动画的自由性太低</li>
-    </ol>
-    <p>恰好Canvas能够完美解决上述问题。</p>
-    <p>使用Canvas完成歌词的逻辑：</p>
-    <ol>
-      <li>获取当前系统缩放和应用缩放并适配，防止Canvas模糊</li>
-      <li>根据解析后的歌词，计算每一行歌词的位置。</li>
-      <li>
-        使用requestAnimationFrame在每一帧完成：
-        <ul>
-          <li>获取当前音频的播放进度</li>
-          <li>计算当前滚动高度，实现滚动动画</li>
-          <li>根据滚动高度与当前行高度的差值，计算缩放动画和字体颜色</li>
-          <li>
-            计算当前逐字动画位置，并计算<code>cutX</code>的位置。<br />
-            与第一版歌词类似，在<code>scrollY</code>处画两份歌词：一份为白色，仅显示<code>cutX</code>左侧的部分；另一份为灰色，仅显示<code>cutX</code>右侧的部分。
-          </li>
-        </ul>
-      </li>
-      <li>监听用户鼠标滚轮，并执行对应的滚动动画。</li>
-    </ol>
-    <p>纯js实现带来的自由度是极高的--这一版动画的效果也是最好的。</p>
-    <h2
-      id="%E6%9C%80%E7%BB%88%E7%89%88%E6%9C%AC%EF%BC%9A%E5%9F%BA%E4%BA%8Eweb-animations-api%E5%92%8Ccss%E7%9A%84%E6%AD%8C%E8%AF%8D%E5%8A%A8%E7%94%BB"
-      tabindex="-1"
-    >
-      最终版本：基于Web Animations API和CSS的歌词动画
-    </h2>
-    <p>最终版歌词动画，在XCMusic 0.3.1（未发布）及之后的版本中使用。</p>
-    <p>在版本迭代中,我发现使用Canvas绘制歌词存在以下问题：</p>
-    <ol>
-      <li>
-        在使用歌词时，electron的GPU进程占用的内存会逐步上涨，大约在一整天内从10MB以内上涨到100MB左右。而electron没有提供api来清除GPU进程的内存占用
-      </li>
-      <li>
-        放弃使用DOM的同时也放弃了现有的滚动容器和排版系统。前者导致歌词的滚动交互体验变差，而后者意味着长行歌词的排版成为一个大问题
-      </li>
-      <li>
-        由于需要在每一帧计算动画，性能优化格外重要。这大大限制了代码的可读性，增大了维护难度
-      </li>
-      <li>画布大小不灵活,无法动态适应布局改变</li>
-    </ol>
-    <p>
-      Web Animations Api可以在js中操控CSS动画,
-      解决了初代方案中动画灵活性的问题。
-    </p>
-    <p>
-      至于内存占用问题, 在加载100句歌词<sup class="footnote-ref"
-        ><a href="#fn1" id="fnref1">[1]</a></sup
+      <h2
+        id="%E4%BA%8C%E4%BB%A3%E6%96%B9%E6%A1%88%EF%BC%9A%E4%BD%BF%E7%94%A8-canvas-%E7%BB%98%E5%88%B6%E6%AD%8C%E8%AF%8D"
+        tabindex="-1"
       >
-      (带翻译)后,
-      渲染进程内存占用仅增加了5MB。并且这部分内存是能够稳定得到释放的。
-    </p>
-    <p>使用Web Animations Api完成歌词动画的基本过程为：</p>
-    <ol>
-      <li>
-        在获取逐字歌词后,
-        调用<code>computeLyricsElements()</code>函数：这个函数会完成：
-        <ul>
-          <li>生成歌词对应的dom元素, 并保存dom元素的引用</li>
-          <li>为行元素添加行动画(缩放动画)</li>
-          <li>为词元素添加从左到右的剪切动画</li>
-          <li>暂停所有动画, 并保存动画的引用</li>
-        </ul>
-      </li>
-      <li>同时, 从逐字歌词生成时间线</li>
-      <li>
-        使用<code>requestAnimationFrame()</code>函数, 在每一帧监听播放进度,
-        并通过时间线计算是否有需要播放的动画
-      </li>
-      <li>需要播放动画时, 调用<code>animate.play()</code>来播放动画。</li>
-    </ol>
-    <pre><code :data-open="codeOpen[1]" class="hljs language-typescript" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 64">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(1)" class="language">typescript</div><div class="copy-button" @click="copyCode(1)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code"><span class="hljs-comment">/** 计算歌词dom和动画 */</span>
+        二代方案：使用 Canvas 绘制歌词
+      </h2>
+      <p>
+        应用于 XCMusic
+        <a href="https://github.com/yiktllw/XCMusic/releases/tag/0.2.5"
+          >0.2.5</a
+        >
+        至
+        <a href="https://github.com/yiktllw/XCMusic/releases/tag/0.3.0"
+          >0.3.0</a
+        >
+        版本。
+      </p>
+      <p>在第一版歌词中，我发现其存在诸多不便利性：</p>
+      <ol>
+        <li>CSS 动画无法暂停</li>
+        <li>过多的 dom 元素导致的内存占用问题</li>
+        <li>CSS 动画的自由性太低</li>
+      </ol>
+      <p>恰好 Canvas 能够完美解决上述问题。</p>
+      <p>使用 Canvas 完成歌词的逻辑：</p>
+      <ol>
+        <li>获取当前系统缩放和应用缩放并适配，防止 Canvas 模糊。</li>
+        <li>根据解析后的歌词，计算每一行歌词的位置。</li>
+        <li>
+          使用 <code>requestAnimationFrame</code> 在每一帧完成：
+          <ul>
+            <li>获取当前音频的播放进度</li>
+            <li>计算当前滚动高度，实现滚动动画</li>
+            <li>根据滚动高度与当前行高度的差值，计算缩放动画和字体颜色</li>
+            <li>
+              计算当前逐字动画位置，并计算 <code>cutX</code> 的位置。<br />
+              与第一版歌词类似，在
+              <code>scrollY</code> 处画两份歌词：一份为白色，仅显示
+              <code>cutX</code> 左侧的部分；另一份为灰色，仅显示
+              <code>cutX</code> 右侧的部分。
+            </li>
+          </ul>
+        </li>
+        <li>监听用户鼠标滚轮，并执行对应的滚动动画。</li>
+      </ol>
+      <p>
+        纯 JavaScript 实现带来的自由度是极高的--这一版动画的效果也是最好的。
+      </p>
+      <h2
+        id="%E6%9C%80%E7%BB%88%E7%89%88%E6%9C%AC%EF%BC%9A%E5%9F%BA%E4%BA%8E-web-animations-api-%E5%92%8C-css-%E7%9A%84%E6%AD%8C%E8%AF%8D%E5%8A%A8%E7%94%BB"
+        tabindex="-1"
+      >
+        最终版本：基于 Web Animations API 和 CSS 的歌词动画
+      </h2>
+      <p>最终版歌词动画，在 XCMusic 0.3.1（未发布）及之后的版本中使用。</p>
+      <p>在版本迭代中,我发现使用 Canvas 绘制歌词存在以下问题：</p>
+      <ol>
+        <li>
+          在使用歌词时，electron 的 GPU
+          进程占用的内存会逐步上涨，大约在一整天内从 10MB 以内上涨到 100MB
+          左右。而 electron 没有提供 api 来清除 GPU 进程的内存占用
+        </li>
+        <li>
+          放弃使用 DOM
+          的同时也放弃了现有的滚动容器和排版系统。前者导致歌词的滚动交互体验变差，而后者意味着长行歌词的排版成为一个大问题
+        </li>
+        <li>
+          由于需要在每一帧计算动画，性能优化格外重要。这大大限制了代码的可读性，增大了维护难度
+        </li>
+        <li>画布大小不灵活,无法动态适应布局改变</li>
+      </ol>
+      <p>
+        Web Animations Api 可以在 JavaScript 中操控 CSS 动画,
+        解决了初代方案中动画灵活性的问题。
+      </p>
+      <p>
+        至于内存占用问题, 在加载 100 句歌词
+        <sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>
+        (带翻译)后, 渲染进程内存占用仅增加了
+        5MB。并且这部分内存是能够稳定得到释放的。
+      </p>
+      <p>使用 Web Animations Api 完成歌词动画的基本过程为：</p>
+      <ol>
+        <li>
+          在获取逐字歌词后, 调用
+          <code>computeLyricsElements()</code> 函数：这个函数会完成：
+          <ul>
+            <li>生成歌词对应的 dom 元素, 并保存 dom 元素的引用</li>
+            <li>为行元素添加行动画(缩放动画)</li>
+            <li>为词元素添加从左到右的剪切动画</li>
+            <li>暂停所有动画, 并保存动画的引用</li>
+          </ul>
+        </li>
+        <li>同时, 从逐字歌词生成时间线</li>
+        <li>
+          使用 <code>requestAnimationFrame()</code> 函数, 在每一帧监听播放进度,
+          并通过时间线计算是否有需要播放的动画
+        </li>
+        <li>需要播放动画时, 调用 <code>animate.play()</code> 来播放动画。</li>
+      </ol>
+      <pre><code :data-open="codeOpen[1]" class="hljs language-typescript" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 64">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(1)" class="language">&lt;TYPESCRIPT&gt;</div><div class="copy-button" @click="copyCode(1)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code"><span class="hljs-comment">/** 计算歌词dom和动画 */</span>
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">computeLyricsElements</span> = (<span class="hljs-params"></span>) =&gt; {
   <span class="hljs-comment">// 清空原有的元素和动画</span>
   <span class="hljs-comment">// 省略清理代码</span>
@@ -272,29 +287,94 @@
   });
 };
 </div></code></pre>
-    <hr class="footnotes-sep" />
-    <section class="footnotes">
-      <ol class="footnotes-list">
-        <li id="fn1" class="footnote-item">
-          <p>
-            <a href="https://music.163.com/song?id=22256832"
-              >贝多芬第九交响曲。富特文格勒 / 1951年拜罗伊特音乐节,
-              网易云音乐id:22256832</a
-            >
-            <a href="#fnref1" class="footnote-backref">↩︎</a>
-          </p>
-        </li>
-      </ol>
-    </section>
+      <hr class="footnotes-sep" />
+      <section class="footnotes">
+        <ol class="footnotes-list">
+          <li id="fn1" class="footnote-item">
+            <p>
+              <a href="https://music.163.com/song?id=22256832"
+                >贝多芬第九交响曲。富特文格勒 / 1951 年拜罗伊特音乐节,
+                网易云音乐 id: 22256832</a
+              >
+              <a href="#fnref1" class="footnote-backref">↩︎</a>
+            </p>
+          </li>
+        </ol>
+      </section>
+    </div>
+    <div class="sidebar-placeholder">
+      <div class="sidebar">
+        <div class="toc">
+          <div class="toc-title">目录</div>
+          <div class="progress-bar" />
+          <ul class="depth-0">
+            <li>
+              <a
+                href="#%E7%9B%AE%E6%A0%87"
+                :class="0 === current_heading ? 'active' : 'not-active'"
+                >1&nbsp;目标</a
+              >
+            </li>
+            <li>
+              <a
+                href="#%E5%88%9D%E4%BB%A3%E6%96%B9%E6%A1%88%EF%BC%9A%E5%9F%BA%E4%BA%8E-css-%E5%8A%A8%E7%94%BB%E7%9A%84%E5%AE%9E%E7%8E%B0"
+                :class="1 === current_heading ? 'active' : 'not-active'"
+                >2&nbsp;初代方案：基于 CSS 动画的实现</a
+              >
+            </li>
+            <li>
+              <a
+                href="#%E4%BA%8C%E4%BB%A3%E6%96%B9%E6%A1%88%EF%BC%9A%E4%BD%BF%E7%94%A8-canvas-%E7%BB%98%E5%88%B6%E6%AD%8C%E8%AF%8D"
+                :class="2 === current_heading ? 'active' : 'not-active'"
+                >3&nbsp;二代方案：使用 Canvas 绘制歌词</a
+              >
+            </li>
+            <li>
+              <a
+                href="#%E6%9C%80%E7%BB%88%E7%89%88%E6%9C%AC%EF%BC%9A%E5%9F%BA%E4%BA%8E-web-animations-api-%E5%92%8C-css-%E7%9A%84%E6%AD%8C%E8%AF%8D%E5%8A%A8%E7%94%BB"
+                :class="3 === current_heading ? 'active' : 'not-active'"
+                >4&nbsp;最终版本：基于 Web Animations API 和 CSS 的歌词动画</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, nextTick } from "vue";
+import { ref, nextTick, onUnmounted } from "vue";
 import copy_svg from "@/assets/svg/copy.svg";
 import blogs from "@/blogs.json";
 import { formatTime_yyyy_mm_dd_hh_mm } from "@/utils/time";
 
 const blog = ref<HTMLElement>();
+const heading_offset_top = ref<number[]>([]);
+const current_heading = ref<number>(0);
+const handleScroll = () => {
+  const scrollTop =
+    document.documentElement.scrollTop || document.body.scrollTop;
+  let _index = 0;
+  heading_offset_top.value.forEach((item, index) => {
+    if (item < scrollTop + 100) {
+      _index = index;
+    }
+  });
+  if (_index !== current_heading.value) current_heading.value = _index;
+};
+nextTick(() => {
+  const headings = document.querySelectorAll(
+    ".blog h1, .blog h2, .blog h3, .blog h4, .blog h5, .blog h6",
+  );
+  headings.forEach((heading) => {
+    heading_offset_top.value.push(heading.getBoundingClientRect().top);
+  });
+  heading_offset_top.value.sort((a, b) => a - b);
+  document.addEventListener("scroll", handleScroll);
+});
+onUnmounted(() => {
+  document.removeEventListener("scroll", handleScroll);
+});
 
 const utteranc = document.createElement("script");
 utteranc.src = "https://utteranc.es/client.js";

@@ -2,12 +2,13 @@
   {
     "component": "@/blogs/2025/04/xcmusic01.vue",
     "blogInfo": {
-      "title": "XCMusic开发者日志01：歌词动画",
+      "title": "XCMusic 开发者日志 01：歌词动画",
       "createTime": 1744120390097,
-      "lastUpdate": 1744359763912,
+      "lastUpdate": 1744470751902,
       "wordCount": 1192,
       "readingTime": 5,
       "category": "default",
+      "tags": [],
       "series": {
         "enable": true,
         "name": "XCMusic开发者日志"
@@ -17,12 +18,13 @@
   {
     "component": "@/blogs/about.vue",
     "blogInfo": {
-      "title": "关于YiktLLW的个人博客",
+      "title": "关于 YiktLLW 的个人博客",
       "createTime": 1743614382251,
-      "lastUpdate": 1744350329571,
-      "wordCount": 554,
+      "lastUpdate": 1744466380987,
+      "wordCount": 530,
       "readingTime": 2,
       "category": "default",
+      "tags": [],
       "series": {
         "enable": false,
         "name": ""

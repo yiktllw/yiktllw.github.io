@@ -1,8 +1,16 @@
 html {
   overflow-y: scroll;
+  font-size: 17.5px;
+  @media (max-width: 600px) {
+    font-size: 14px;
+  }
+  scroll-timeline: --scrollTimeline y;
+  scroll-timeline: --scrollTimeline vertical;
 }
 :root {
-  font-family: "Noto Serif", "Georgia", "Times New Roman", Times, serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   line-height: 1.5;
   font-weight: 400;
 
@@ -76,15 +84,15 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 3.2rem;
   line-height: 1.1;
 }
 
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
   font-weight: 500;
   font-family: inherit;
   background-color: var(--btn-bg-color);
@@ -102,7 +110,7 @@ button:focus-visible {
 }
 
 .card {
-  padding: 2em;
+  padding: 2rem;
 }
 
 #app {
@@ -115,14 +123,6 @@ button:focus-visible {
 @font-face {
   font-family: "yiktllw-code";
   src: url("./assets/ascii-yiktllwcode.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Noto Serif";
-  src: url("./assets/NotoSerif-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;

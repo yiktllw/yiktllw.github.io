@@ -8,6 +8,7 @@ import hilightjs from "highlight.js";
 import { readdirSync, statSync } from "node:fs";
 import path, { resolve, relative, parse, join } from "node:path";
 import { colors, colorize } from "./color";
+import { generateToc } from "./md-toc";
 
 const startTime = Date.now();
 
@@ -48,89 +49,12 @@ const filename = args[0] || process.exit(1);
 
 const md = markdownit({
   html: true,
+  breaks: true,
 });
 md.use(anchor).use(katex).use(footnote);
 
 const codeToCopy: string[] = [];
 let copyIndex = 0;
-
-const myHighlight = (str: string, lang: string) => {
-  if (str.endsWith("\n")) str = str.slice(0, -1);
-  const before =
-    `<pre>` +
-    `<code class="hljs" style="font-family: yiktllw-code, serif;">` +
-    `<div class="copy-button" @click="copyCode(${copyIndex})">` +
-    `<img class="copy-img g-icon" :src="copy_svg"/>` +
-    `</div>` +
-    `<details class="code-details" open="true">` +
-    `<summary>${lang}</summary>`;
-
-  const after = `</details></code></pre>`;
-
-  codeToCopy[copyIndex] = str;
-  copyIndex++;
-
-  let highlighted;
-  if (lang && hilightjs.getLanguage(lang)) {
-    try {
-      highlighted = hilightjs.highlight(str, {
-        language: lang,
-      }).value;
-      if (lang.toLowerCase() === "vue") {
-        highlighted = highlighted
-          .replace(/\{\{/g, "&lbrace;&lbrace;")
-          .replace(/\}\}/g, "&rbrace;&rbrace;");
-      }
-    } catch (__) {
-      console.error(__);
-      highlighted = md.utils.escapeHtml(str);
-    }
-  }
-
-  const lines: string[] = highlighted.split("\n");
-  let output = "";
-  let tagStack: string[] = [];
-  let pendingLines: string[] = [];
-
-  // 改进的标签解析器
-  const parseTags = (line: string) => {
-    const tags = line.match(/<\/?([a-z][^\s/>]*)|(\/>)/gi) || [];
-
-    tags.forEach((token) => {
-      const isClosing = token.startsWith("</");
-      const isSelfClosing = token.endsWith("/>");
-      const tagName = token.match(/[a-z][^\s/>]*/i)?.[0]?.toLowerCase();
-
-      if (isSelfClosing) return; // 忽略自闭合标签
-      if (!tagName) return;
-
-      if (isClosing) {
-        while (tagStack.pop() !== tagName && tagStack.length > 0);
-      } else {
-        tagStack.push(tagName);
-      }
-    });
-  };
-
-  lines.forEach((line, index) => {
-    pendingLines.push(line);
-    parseTags(line);
-
-    // 在以下情况闭合包裹：
-    // 1. 标签栈完全闭合
-    // 2. 最后一行强制闭合
-    if (tagStack.length === 0 || index === lines.length - 1) {
-      const codeBlock = pendingLines.join("\n");
-      output += `<div class="line">${codeBlock}</div>`;
-      pendingLines = [];
-    }
-  });
-
-  codeToCopy[copyIndex] = str;
-  copyIndex++;
-
-  return before + output + after;
-};
 
 const hljs = (str: string, lang: string) => {
   codeToCopy[copyIndex] = str;
@@ -145,7 +69,7 @@ const hljs = (str: string, lang: string) => {
   const beforeTemplate =
     `<pre><code :data-open="codeOpen[${copyIndex}]" class="hljs language-${lang}" style="font-family: yiktllw-code, serif; position: relative;">` +
     `<div class="line-numbers"><span v-for="i in ${lineCount}">{{ i }}</span></div>` +
-    `<div class="top-line"><div @click="toggleCodeOpen(${copyIndex})" class="language">${lang}</div><div class="copy-button" @click="copyCode(${copyIndex})"><img class="copy-img" :src="copy_svg"/></div></div>` +
+    `<div class="top-line"><div @click="toggleCodeOpen(${copyIndex})" class="language">&lt;${lang.toUpperCase()}&gt;</div><div class="copy-button" @click="copyCode(${copyIndex})"><img class="copy-img" :src="copy_svg"/></div></div>` +
     `<div class="code">`;
   const afterTemplate = `</div></code></pre>`;
 
@@ -157,7 +81,10 @@ md.options.highlight = hljs;
 
 const blog = fs.readFileSync(`blogs/${filename}.md`, "utf-8");
 const result = md.render(blog);
+const [_headings, headings_html_str] = generateToc(blog);
+
 const vue = `<template>
+<div class="blog-container" ref="container">
   <div class="blog" ref="blog">
     <div class="blog-info">
       <h1 class="blog-title">
@@ -186,14 +113,48 @@ const vue = `<template>
     </div>
     ${result}
   </div>
+  <div class="sidebar-placeholder">
+    <div class="sidebar">
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <div class="progress-bar"/>
+        ${headings_html_str}
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 <script setup lang="ts">
-import { ref, nextTick } from "vue";
+import { ref, nextTick, onUnmounted } from "vue";
 import copy_svg from "@/assets/svg/copy.svg";
 import blogs from "@/blogs.json";
 import { formatTime_yyyy_mm_dd_hh_mm } from "@/utils/time";
 
 const blog = ref<HTMLElement>();
+const heading_offset_top = ref<number[]>([]);
+const current_heading = ref<number>(0);
+const handleScroll = () => {
+  const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+  let _index = 0;
+  heading_offset_top.value.forEach((item, index) => {
+    if (item < scrollTop + 100) {
+      _index = index;
+    }
+  });
+  if (_index !== current_heading.value) current_heading.value = _index;
+}
+nextTick(() => {
+  const headings = document.querySelectorAll(".blog h1, .blog h2, .blog h3, .blog h4, .blog h5, .blog h6");
+  headings.forEach((heading) => {
+    heading_offset_top.value.push(heading.getBoundingClientRect().top);
+  });
+  heading_offset_top.value.sort((a, b) => a - b);
+  document.addEventListener("scroll", handleScroll);
+});
+onUnmounted(() => {
+  document.removeEventListener("scroll", handleScroll);
+});
+
 
 const utteranc = document.createElement("script");
 utteranc.src = "https://utteranc.es/client.js";
@@ -293,7 +254,10 @@ const blogRoutes = generateRoutes();
 
 const routes_arr = blogRoutes
   .map((route) => {
-    const filename = route.component.split("/").pop()?.split(".")[0];
+    const filename = route.component
+      .slice(8, -4)
+      .replace(/\//g, "_")
+      .replace(/\\/g, "_");
     return `  {\n    path: "/blog/${filename}",\n    component: () => import('${route.component}')\n  }`;
   })
   .join(",\n");
@@ -322,6 +286,8 @@ type BlogMeta = {
     readingTime: number;
     /** 分类 */
     category: string;
+    /** 标签 */
+    tags: string[];
     /** 系列，用于连载 */
     series: {
       enable: boolean;
@@ -368,6 +334,7 @@ function mergeMetaData(routes: Array<{ component: string }>) {
         wordCount: wordCount,
         readingTime: readingTime,
         category: existing?.blogInfo.category || "default", // 默认分类
+        tags: existing?.blogInfo.tags || [],
         series: {
           enable: existing?.blogInfo.series.enable || false,
           name: existing?.blogInfo.series.name || "",

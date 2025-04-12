@@ -22,8 +22,8 @@ export const router = createRouter({
   },
 });
 
-router.beforeEach((_to, _from, next) => {
-  Nprogress.start();
+router.beforeEach((to, _from, next) => {
+  if (!to.hash.slice(1)) Nprogress.start();
   next();
 });
 router.afterEach(() => {
