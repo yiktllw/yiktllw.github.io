@@ -33,6 +33,7 @@ html {
   --icon-invert: invert(0);
   --color: rgba(255, 255, 255, 0.87);
   --bg-color: #242424;
+  --top-bg-color: #202020;
   --a-color: #646cff;
   --a-hover-color: #535bf2;
   --btn-bg-color: transparent;
@@ -44,6 +45,7 @@ html {
   --icon-invert: invert(1);
   --color: #000;
   --bg-color: white;
+  --top-bg-color: #e8e8e8;
   --a-color: #747bff;
   --a-hover-color: #535bf2;
   --btn-bg-color: transparent;
@@ -92,9 +94,7 @@ button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6rem 1.2rem;
-  font-size: 1rem;
   font-weight: 500;
-  font-family: inherit;
   background-color: var(--btn-bg-color);
   color: var(--color);
   transition:
@@ -107,6 +107,17 @@ button:hover {
 }
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.g-button {
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
+}
+.g-button:hover {
+  border-color: #646cff;
 }
 
 .card {

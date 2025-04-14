@@ -9,6 +9,7 @@ import { readdirSync, statSync } from "node:fs";
 import path, { resolve, relative, parse, join } from "node:path";
 import { colors, colorize } from "./color";
 import { generateToc } from "./md-toc";
+import { getMarkdownSummary } from "./md-abstract";
 
 const startTime = Date.now();
 
@@ -59,11 +60,9 @@ let copyIndex = 0;
 const hljs = (str: string, lang: string) => {
   codeToCopy[copyIndex] = str;
   let result = hilightjs.highlight(str, { language: lang }).value;
-  if (lang.toLowerCase() === "vue") {
-    result = result
-      .replace(/\{\{/g, "&lbrace;&lbrace;")
-      .replace(/\}\}/g, "&rbrace;&rbrace;");
-  }
+  result = result
+    .replace(/\{\{/g, "&lbrace;&lbrace;")
+    .replace(/\}\}/g, "&rbrace;&rbrace;");
   const lineCount = (result.match(/\n/g) || []).length;
   // side effect
   const beforeTemplate =
@@ -90,35 +89,48 @@ const vue = `<template>
       <h1 class="blog-title">
         {{ currentBlog?.blogInfo.title ?? "Untitled" }}
       </h1>
-      <div class="info">
-        <span class="create-time">
-          <span class="ele-title">发布于：</span>{{ formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.createTime ?? 0) }}
-        </span>
-        <span class="last-update">
-          <span class="ele-title">修改于：</span>{{ formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.lastUpdate ?? 0) }}
-        </span>
-        <span class="reading-time">
-          <span class="ele-title">阅读时长：</span>{{ currentBlog?.blogInfo.readingTime }}分钟
-        </span>
-        <span class="category" v-if="currentBlog?.blogInfo.category !== 'default'">
-          <span class="ele-title">分类：</span>{{ currentBlog?.blogInfo.category }}
-        </span>
-        <span class="series" v-if="currentBlog?.blogInfo.series.enable">
-          <span class="ele-title">系列：</span>{{ currentBlog?.blogInfo.series.name }}
-        </span>
-        <span class="copy-right">
-          <span class="ele-title">许可协议：</span><p xmlns:cc="http://creativecommons.org/ns#" ><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC-SA 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt=""></a></p>
-        </span>
-      </div>
     </div>
     ${result}
   </div>
   <div class="sidebar-placeholder">
-    <div class="sidebar">
-      <div class="toc">
-        <div class="toc-title">目录</div>
-        <div class="progress-bar"/>
-        ${headings_html_str}
+    <div class="sidebar-container">
+      <div class="nav">
+        <div class="nav-item selected" id="nav_article" @click="nav_to('article')">文章信息</div>
+        <div class="nav-item" id="nav_site" @click="nav_to('site')">站点概览</div>
+      </div>
+      <div class="nav-content">
+        <div class="article toc active" id="article">
+          <div class="toc-title">目录</div>
+          <div class="progress-bar"/>
+          ${headings_html_str}
+          <div class="info">
+            <span class="create-time">
+              <span class="ele-title">创建于：</span>{{ formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.createTime ?? 0) }}
+            </span>
+            <span class="last-update">
+              <span class="ele-title">修改于：</span>{{ formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.lastUpdate ?? 0) }}
+            </span>
+            <span class="reading-time">
+              <span class="ele-title">预计阅读时间：</span>{{ currentBlog?.blogInfo.readingTime }}分钟
+            </span>
+            <span class="category" v-if="currentBlog?.blogInfo.category !== 'default'">
+              <span class="ele-title">分类于：</span>{{ currentBlog?.blogInfo.category }}
+            </span>
+            <span class="series" v-if="currentBlog?.blogInfo.series.enable">
+              <span class="ele-title">系列：</span>{{ currentBlog?.blogInfo.series.name }}
+            </span>
+            <span class="copy-right">
+              <span class="ele-title">许可协议：</span><p xmlns:cc="http://creativecommons.org/ns#" ><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC-SA 4.0</a></p>
+            </span>
+            <span class="tags" v-if="currentBlog && currentBlog.blogInfo.tags.length > 0">
+              <span class="ele-title">标签：</span>
+              <span v-for="tag in currentBlog?.blogInfo.tags" class="tag" :key="tag">{{ tag }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="site" id="site">
+          标签2的内容
+        </div>
       </div>
     </div>
   </div>
@@ -134,20 +146,32 @@ const blog = ref<HTMLElement>();
 const heading_offset_top = ref<number[]>([]);
 const current_heading = ref<number>(0);
 const handleScroll = () => {
-  const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+  const scrollTop =
+    (document.documentElement.scrollTop || document.body.scrollTop) + 100;
   let _index = 0;
-  heading_offset_top.value.forEach((item, index) => {
-    if (item < scrollTop + 100) {
-      _index = index;
+  for (const [index, item] of heading_offset_top.value.entries()) {
+    if (scrollTop > item) {
+      if (
+        heading_offset_top.value[index + 1] &&
+        scrollTop < heading_offset_top.value[index + 1]
+      ) {        
+        _index = index;
+        break;
+      } else if (index === heading_offset_top.value.length - 1) {
+        _index = index;
+      }
     }
-  });
+  }
   if (_index !== current_heading.value) current_heading.value = _index;
 }
 nextTick(() => {
-  const headings = document.querySelectorAll(".blog h1, .blog h2, .blog h3, .blog h4, .blog h5, .blog h6");
+  const headings = document.querySelectorAll(
+    ".blog h2, .blog h3, .blog h4, .blog h5, .blog h6",
+  ) as NodeListOf<HTMLElement>;
   headings.forEach((heading) => {
-    heading_offset_top.value.push(heading.getBoundingClientRect().top);
+    heading_offset_top.value.push(heading.offsetTop);
   });
+  heading_offset_top.value.map((a) => -a);
   heading_offset_top.value.sort((a, b) => a - b);
   document.addEventListener("scroll", handleScroll);
 });
@@ -155,6 +179,33 @@ onUnmounted(() => {
   document.removeEventListener("scroll", handleScroll);
 });
 
+const nav_to = (id: "article" | "site") => {
+  const content = document.getElementById(id);
+  const content_to_be_hidden = document.getElementById(id === "article" ? "site" : "article");
+
+  if (content_to_be_hidden) {
+    content_to_be_hidden.classList.remove("active");
+    if (content) {
+      content.style.display = "block";
+      content.style.position = "absolute";
+    }
+    setTimeout(() => {
+      if (content) {
+        content.classList.add("active");
+        content.style.position = "initial";
+      }
+      content_to_be_hidden.style.display = "none";
+    }, 200);
+  } else {
+    if (content) content.classList.add("active");
+  }
+  
+  const selected = document.getElementById("nav_" + id);
+  const unselected = document.getElementById("nav_" + (id === "article" ? "site" : "article"));
+  
+  if (selected) selected.classList.add("selected");
+  if (unselected) unselected.classList.remove("selected");
+}
 
 const utteranc = document.createElement("script");
 utteranc.src = "https://utteranc.es/client.js";
@@ -276,6 +327,8 @@ type BlogMeta = {
   blogInfo: {
     /** 标题 */
     title: string;
+    /** 摘要 */
+    abstract: string;
     /** 创建时间 */
     createTime: number;
     /** 最后修改时间 */
@@ -309,7 +362,7 @@ function getMetaData(): BlogMeta[] {
 }
 
 // 合并新旧数据
-function mergeMetaData(routes: Array<{ component: string }>) {
+function mergeMetaData(routes: Array<{ component: string }>): BlogMeta[] {
   const now = Date.now();
   const existingData = getMetaData();
 
@@ -324,13 +377,17 @@ function mergeMetaData(routes: Array<{ component: string }>) {
       route.component.substring(2, route.component.length - 4) + ".md";
     console.log(path);
     const { wordCount, readingTime } = countMarkdownWords(path);
+    // 从md生成摘要
+    let abstract = existing?.blogInfo.abstract ?? "";
+    if (abstract === "") abstract = getMarkdownSummary(blog, 200);
 
     return {
       component: route.component,
       blogInfo: {
         title: existing?.blogInfo.title || "", // 保留已有标题或初始化
+        abstract,
         createTime: existing?.blogInfo.createTime || now, // 已有值或新时间戳
-        lastUpdate: isCurrent ? now : existing?.blogInfo.lastUpdate,
+        lastUpdate: isCurrent ? now : (existing?.blogInfo.lastUpdate ?? now),
         wordCount: wordCount,
         readingTime: readingTime,
         category: existing?.blogInfo.category || "default", // 默认分类
@@ -340,7 +397,7 @@ function mergeMetaData(routes: Array<{ component: string }>) {
           name: existing?.blogInfo.series.name || "",
         },
       },
-    } as BlogMeta;
+    };
   });
 }
 

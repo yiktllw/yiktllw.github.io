@@ -1,32 +1,14 @@
 <template>
-  <div class="app">
-    <div class="top">
-      <div class="left"></div>
-      <div class="center">
-        <button @click="goHome">主页</button>
-      </div>
-      <div class="right">
-        <div class="theme-toggle" @click="toggleTheme">
-          <svg
-            t="1743752537288"
-            class="icon"
-            viewBox="0 0 1024 1024"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            p-id="4337"
-            width="25"
-            height="25"
-          >
-            <path
-              d="M512 938.666667c235.648 0 426.666667-191.018667 426.666667-426.666667S747.648 85.333333 512 85.333333 85.333333 276.352 85.333333 512s191.018667 426.666667 426.666667 426.666667z m0-85.333334V170.666667a341.333333 341.333333 0 1 1 0 682.666666z"
-              fill="var(--color)"
-              style="transition: fill var(--animation-time)"
-              p-id="4338"
-            ></path>
-          </svg>
-        </div>
-      </div>
+  <div class="top">
+    <div class="left"></div>
+    <div class="center">
+      <div class="home g-button" @click="goHome">主页</div>
     </div>
+    <div class="right">
+      <span class="theme-toggle g-button" @click="toggleTheme"> </span>
+    </div>
+  </div>
+  <div class="app">
     <RouterView />
   </div>
 </template>
@@ -86,6 +68,41 @@ window
 </script>
 
 <style lang="scss" scoped>
+.top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+  height: 3.5rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  width: 100vw;
+  background-color: var(--top-bg-color) !important;
+  transition: background-color var(--animation-time);
+
+  .center {
+    .home {
+      &::before {
+        content: "\f015";
+        margin-right: 10px;
+        font-family: "fas";
+      }
+    }
+  }
+
+  .right {
+    padding-right: 20px;
+    .theme-toggle {
+      &::before {
+        content: "\f042";
+        font-family: "fas";
+      }
+    }
+  }
+}
 .app {
   display: flex;
   flex-direction: column;
@@ -93,30 +110,6 @@ window
   position: relative;
   width: 100%;
   padding-top: 3rem;
-  .top {
-    position: fixed;
-    top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 3rem;
-    z-index: 100;
-    width: 100%;
-    background-color: var(--bg-color);
-    transition: background-color var(--animation-time);
-
-    .right {
-      padding-right: 20px;
-      .theme-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        width: 40px;
-        height: 40px;
-      }
-    }
-  }
 }
 
 .logo {

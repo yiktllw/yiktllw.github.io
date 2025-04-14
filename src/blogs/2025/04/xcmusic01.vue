@@ -5,75 +5,6 @@
         <h1 class="blog-title">
           {{ currentBlog?.blogInfo.title ?? "Untitled" }}
         </h1>
-        <div class="info">
-          <span class="create-time">
-            <span class="ele-title">发布于：</span
-            >{{
-              formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.createTime ?? 0)
-            }}
-          </span>
-          <span class="last-update">
-            <span class="ele-title">修改于：</span
-            >{{
-              formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.lastUpdate ?? 0)
-            }}
-          </span>
-          <span class="reading-time">
-            <span class="ele-title">阅读时长：</span
-            >{{ currentBlog?.blogInfo.readingTime }}分钟
-          </span>
-          <span
-            class="category"
-            v-if="currentBlog?.blogInfo.category !== 'default'"
-          >
-            <span class="ele-title">分类：</span
-            >{{ currentBlog?.blogInfo.category }}
-          </span>
-          <span class="series" v-if="currentBlog?.blogInfo.series.enable">
-            <span class="ele-title">系列：</span
-            >{{ currentBlog?.blogInfo.series.name }}
-          </span>
-          <span class="copy-right">
-            <span class="ele-title">许可协议：</span>
-            <p xmlns:cc="http://creativecommons.org/ns#">
-              <a
-                href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1"
-                target="_blank"
-                rel="license noopener noreferrer"
-                style="display: inline-block"
-                >CC BY-NC-SA 4.0<img
-                  style="
-                    height: 22px !important;
-                    margin-left: 3px;
-                    vertical-align: text-bottom;
-                  "
-                  src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
-                  alt="" /><img
-                  style="
-                    height: 22px !important;
-                    margin-left: 3px;
-                    vertical-align: text-bottom;
-                  "
-                  src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"
-                  alt="" /><img
-                  style="
-                    height: 22px !important;
-                    margin-left: 3px;
-                    vertical-align: text-bottom;
-                  "
-                  src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1"
-                  alt="" /><img
-                  style="
-                    height: 22px !important;
-                    margin-left: 3px;
-                    vertical-align: text-bottom;
-                  "
-                  src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"
-                  alt=""
-              /></a>
-            </p>
-          </span>
-        </div>
       </div>
       <p>
         网易云音乐的歌词 api
@@ -303,40 +234,112 @@
       </section>
     </div>
     <div class="sidebar-placeholder">
-      <div class="sidebar">
-        <div class="toc">
-          <div class="toc-title">目录</div>
-          <div class="progress-bar" />
-          <ul class="depth-0">
-            <li>
-              <a
-                href="#%E7%9B%AE%E6%A0%87"
-                :class="0 === current_heading ? 'active' : 'not-active'"
-                >1&nbsp;目标</a
+      <div class="sidebar-container">
+        <div class="nav">
+          <div
+            class="nav-item selected"
+            id="nav_article"
+            @click="nav_to('article')"
+          >
+            文章信息
+          </div>
+          <div class="nav-item" id="nav_site" @click="nav_to('site')">
+            站点概览
+          </div>
+        </div>
+        <div class="nav-content">
+          <div class="article toc active" id="article">
+            <div class="toc-title">目录</div>
+            <div class="progress-bar" />
+            <ul class="depth-0">
+              <li>
+                <a
+                  href="#%E7%9B%AE%E6%A0%87"
+                  :class="0 === current_heading ? 'active' : 'not-active'"
+                  >1&nbsp;目标</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#%E5%88%9D%E4%BB%A3%E6%96%B9%E6%A1%88%EF%BC%9A%E5%9F%BA%E4%BA%8E-css-%E5%8A%A8%E7%94%BB%E7%9A%84%E5%AE%9E%E7%8E%B0"
+                  :class="1 === current_heading ? 'active' : 'not-active'"
+                  >2&nbsp;初代方案：基于 CSS 动画的实现</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#%E4%BA%8C%E4%BB%A3%E6%96%B9%E6%A1%88%EF%BC%9A%E4%BD%BF%E7%94%A8-canvas-%E7%BB%98%E5%88%B6%E6%AD%8C%E8%AF%8D"
+                  :class="2 === current_heading ? 'active' : 'not-active'"
+                  >3&nbsp;二代方案：使用 Canvas 绘制歌词</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#%E6%9C%80%E7%BB%88%E7%89%88%E6%9C%AC%EF%BC%9A%E5%9F%BA%E4%BA%8E-web-animations-api-%E5%92%8C-css-%E7%9A%84%E6%AD%8C%E8%AF%8D%E5%8A%A8%E7%94%BB"
+                  :class="3 === current_heading ? 'active' : 'not-active'"
+                  >4&nbsp;最终版本：基于 Web Animations API 和 CSS 的歌词动画</a
+                >
+              </li>
+            </ul>
+            <div class="info">
+              <span class="create-time">
+                <span class="ele-title">创建于：</span
+                >{{
+                  formatTime_yyyy_mm_dd_hh_mm(
+                    currentBlog?.blogInfo.createTime ?? 0,
+                  )
+                }}
+              </span>
+              <span class="last-update">
+                <span class="ele-title">修改于：</span
+                >{{
+                  formatTime_yyyy_mm_dd_hh_mm(
+                    currentBlog?.blogInfo.lastUpdate ?? 0,
+                  )
+                }}
+              </span>
+              <span class="reading-time">
+                <span class="ele-title">预计阅读时间：</span
+                >{{ currentBlog?.blogInfo.readingTime }}分钟
+              </span>
+              <span
+                class="category"
+                v-if="currentBlog?.blogInfo.category !== 'default'"
               >
-            </li>
-            <li>
-              <a
-                href="#%E5%88%9D%E4%BB%A3%E6%96%B9%E6%A1%88%EF%BC%9A%E5%9F%BA%E4%BA%8E-css-%E5%8A%A8%E7%94%BB%E7%9A%84%E5%AE%9E%E7%8E%B0"
-                :class="1 === current_heading ? 'active' : 'not-active'"
-                >2&nbsp;初代方案：基于 CSS 动画的实现</a
+                <span class="ele-title">分类于：</span
+                >{{ currentBlog?.blogInfo.category }}
+              </span>
+              <span class="series" v-if="currentBlog?.blogInfo.series.enable">
+                <span class="ele-title">系列：</span
+                >{{ currentBlog?.blogInfo.series.name }}
+              </span>
+              <span class="copy-right">
+                <span class="ele-title">许可协议：</span>
+                <p xmlns:cc="http://creativecommons.org/ns#">
+                  <a
+                    href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1"
+                    target="_blank"
+                    rel="license noopener noreferrer"
+                    style="display: inline-block"
+                    >CC BY-NC-SA 4.0</a
+                  >
+                </p>
+              </span>
+              <span
+                class="tags"
+                v-if="currentBlog && currentBlog.blogInfo.tags.length > 0"
               >
-            </li>
-            <li>
-              <a
-                href="#%E4%BA%8C%E4%BB%A3%E6%96%B9%E6%A1%88%EF%BC%9A%E4%BD%BF%E7%94%A8-canvas-%E7%BB%98%E5%88%B6%E6%AD%8C%E8%AF%8D"
-                :class="2 === current_heading ? 'active' : 'not-active'"
-                >3&nbsp;二代方案：使用 Canvas 绘制歌词</a
-              >
-            </li>
-            <li>
-              <a
-                href="#%E6%9C%80%E7%BB%88%E7%89%88%E6%9C%AC%EF%BC%9A%E5%9F%BA%E4%BA%8E-web-animations-api-%E5%92%8C-css-%E7%9A%84%E6%AD%8C%E8%AF%8D%E5%8A%A8%E7%94%BB"
-                :class="3 === current_heading ? 'active' : 'not-active'"
-                >4&nbsp;最终版本：基于 Web Animations API 和 CSS 的歌词动画</a
-              >
-            </li>
-          </ul>
+                <span class="ele-title">标签：</span>
+                <span
+                  v-for="tag in currentBlog?.blogInfo.tags"
+                  class="tag"
+                  :key="tag"
+                  >{{ tag }}</span
+                >
+              </span>
+            </div>
+          </div>
+          <div class="site" id="site">标签2的内容</div>
         </div>
       </div>
     </div>
@@ -353,28 +356,69 @@ const heading_offset_top = ref<number[]>([]);
 const current_heading = ref<number>(0);
 const handleScroll = () => {
   const scrollTop =
-    document.documentElement.scrollTop || document.body.scrollTop;
+    (document.documentElement.scrollTop || document.body.scrollTop) + 100;
   let _index = 0;
-  heading_offset_top.value.forEach((item, index) => {
-    if (item < scrollTop + 100) {
-      _index = index;
+  for (const [index, item] of heading_offset_top.value.entries()) {
+    if (scrollTop > item) {
+      if (
+        heading_offset_top.value[index + 1] &&
+        scrollTop < heading_offset_top.value[index + 1]
+      ) {
+        _index = index;
+        break;
+      } else if (index === heading_offset_top.value.length - 1) {
+        _index = index;
+      }
     }
-  });
+  }
   if (_index !== current_heading.value) current_heading.value = _index;
 };
 nextTick(() => {
   const headings = document.querySelectorAll(
-    ".blog h1, .blog h2, .blog h3, .blog h4, .blog h5, .blog h6",
-  );
+    ".blog h2, .blog h3, .blog h4, .blog h5, .blog h6",
+  ) as NodeListOf<HTMLElement>;
   headings.forEach((heading) => {
-    heading_offset_top.value.push(heading.getBoundingClientRect().top);
+    heading_offset_top.value.push(heading.offsetTop);
   });
+  heading_offset_top.value.map((a) => -a);
   heading_offset_top.value.sort((a, b) => a - b);
   document.addEventListener("scroll", handleScroll);
 });
 onUnmounted(() => {
   document.removeEventListener("scroll", handleScroll);
 });
+
+const nav_to = (id: "article" | "site") => {
+  const content = document.getElementById(id);
+  const content_to_be_hidden = document.getElementById(
+    id === "article" ? "site" : "article",
+  );
+
+  if (content_to_be_hidden) {
+    content_to_be_hidden.classList.remove("active");
+    if (content) {
+      content.style.display = "block";
+      content.style.position = "absolute";
+    }
+    setTimeout(() => {
+      if (content) {
+        content.classList.add("active");
+        content.style.position = "initial";
+      }
+      content_to_be_hidden.style.display = "none";
+    }, 200);
+  } else {
+    if (content) content.classList.add("active");
+  }
+
+  const selected = document.getElementById("nav_" + id);
+  const unselected = document.getElementById(
+    "nav_" + (id === "article" ? "site" : "article"),
+  );
+
+  if (selected) selected.classList.add("selected");
+  if (unselected) unselected.classList.remove("selected");
+};
 
 const utteranc = document.createElement("script");
 utteranc.src = "https://utteranc.es/client.js";

@@ -1,5 +1,6 @@
 html[data-theme="dark"] {
   .blog {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     h2 {
       border-bottom: 1px solid #444;
     }
@@ -14,26 +15,27 @@ html[data-theme="dark"] {
   }
 }
 html[data-theme="light"] {
-  h2 {
-    border-bottom: 1px solid #ccc;
-  }
   .blog {
+    box-shadow: 0 3px 20px rgba(0, 0, 0, 0.4);
+    h2 {
+      border-bottom: 1px solid #ccc;
+    }
     h2::before {
       color: darkslategrey;
     }
-  }
-  blockquote {
-    background-color: #f9f9f9;
-    color: #666;
-    border-left: 4px solid #ccc;
+    blockquote {
+      background-color: #f9f9f9;
+      color: #666;
+      border-left: 4px solid #ccc;
+    }
   }
 }
 
 .blog-container {
   display: flex;
   flex-direction: row;
-  @media (max-width: 1240px) {
-    .sidebar {
+  @media (max-width: 1280px) {
+    .sidebar-placeholder {
       transform: translateX(110px);
       opacity: 0;
     }
@@ -42,61 +44,6 @@ html[data-theme="light"] {
     width: 240px;
     padding-left: 40px;
     position: relative;
-    .sidebar {
-      position: fixed;
-      text-align: left;
-      transition:
-        opacity 0.3s ease,
-        transform 0.3s ease;
-      .toc {
-        .toc-title {
-          margin-bottom: 5px;
-        }
-        width: 240px;
-        ul {
-          padding: 0;
-          padding-left: 20px;
-          a {
-            color: unset;
-            transition: color 0.1s ease;
-          }
-          a.active {
-            color: #e9546b;
-          }
-          li {
-            line-height: 1.65rem;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            &::marker {
-              content: "";
-            }
-          }
-        }
-        .depth-0 {
-          padding-left: 0;
-          margin-top: 5px;
-        }
-        .progress-bar {
-          position: sticky;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 4px;
-          background-color: rgb(205, 145, 165);
-          animation-name: length;
-          animation-timeline: --scrollTimeline;
-        }
-      }
-      @keyframes length {
-        0% {
-          clip-path: inset(0 100% 0 0 round 20px);
-        }
-        100% {
-          clip-path: inset(0 0 0 0 round 20px);
-        }
-      }
-    }
   }
 }
 
@@ -116,22 +63,17 @@ html[data-theme="light"] {
   margin-right: auto;
   margin-left: auto;
   line-height: 1.8rem;
+  border-radius: 5px;
+  padding: 2rem 2.4rem;
   @media (max-width: 1080px) {
     max-width: calc(100vw - 80px);
   }
   h2 {
     font-size: 1.75rem;
     margin: 1.8rem 0 0 0;
-    padding: 0 0 1rem 0;
-    line-height: 1.55rem;
+    padding: 0 0 0.4rem 0;
+    line-height: 3rem;
     letter-spacing: -0.03rem;
-  }
-  h2::before {
-    content: "\f1dc";
-    position: absolute;
-    transform: translateX(-130%);
-    opacity: 0.8;
-    font-family: "fas";
   }
   p {
     margin: 1rem 0 0 0;
@@ -160,37 +102,6 @@ html[data-theme="light"] {
       font-size: 40px;
       text-align: center;
       font-weight: normal;
-    }
-    .info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      .copy-right {
-        display: inline-flex;
-        flex-direction: row;
-        p {
-          margin: 0;
-        }
-      }
-      .author::before {
-        content: "\f5ad";
-        font-family: "far";
-      }
-      .create-time::before {
-        content: "\f073";
-        font-family: "far";
-      }
-      .last-update::before {
-        content: "\f044";
-        font-family: "far";
-      }
-      .reading-time::before {
-        content: "\f017";
-        font-family: "far";
-      }
-      .ele-title {
-        display: inline-block;
-      }
     }
   }
   .img {
@@ -289,5 +200,135 @@ html[data-theme="light"] {
   pre.plain-text {
     font-size: 16px;
     margin: 0;
+  }
+}
+
+.blog-container .sidebar-placeholder > .sidebar-container {
+  height: calc(100vh - 200px);
+  padding: 20px;
+  position: fixed;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+.blog-container .sidebar-placeholder {
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+  .nav {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 240px;
+    justify-content: center;
+    .nav-item {
+      cursor: pointer;
+      user-select: none;
+      padding: 0 8px 5px 8px;
+      transition: border-bottom 0.3s ease;
+      border-bottom: 3px solid transparent;
+    }
+    .selected {
+      border-bottom: 3px solid #e9546b;
+    }
+  }
+  .nav-content {
+    margin-top: 20px;
+    text-align: left;
+    width: 240px;
+    & > * {
+      width: 100%;
+      transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+      opacity: 0;
+    }
+    & > .article {
+      transform: translateX(-20px);
+    }
+    & > .site {
+      transform: translateX(20px);
+    }
+    .active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .article {
+      .info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        .copy-right {
+          display: inline-flex;
+          flex-direction: row;
+          p {
+            margin: 0;
+          }
+        }
+        .ele-title {
+          display: inline-block;
+        }
+        .tags {
+          display: flex;
+          flex-wrap: wrap;
+          .tag {
+            margin: 0 10px 3px 0;
+            color: var(--a-color);
+            cursor: pointer;
+            &::before {
+              content: "\f02b";
+              margin-right: 3px;
+              font-family: "fas";
+            }
+          }
+        }
+      }
+    }
+    .toc {
+      .toc-title {
+        margin-bottom: 5px;
+      }
+      width: 240px;
+      ul {
+        padding: 0;
+        padding-left: 20px;
+        a {
+          color: unset;
+          transition: color 0.2s ease;
+        }
+        a.active {
+          color: #e9546b;
+        }
+        li {
+          line-height: 1.65rem;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          &::marker {
+            content: "";
+          }
+        }
+      }
+      .depth-0 {
+        padding-left: 0;
+        margin-top: 5px;
+      }
+      .progress-bar {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background-color: rgb(205, 145, 165);
+        animation-name: length;
+        animation-timeline: --scrollTimeline;
+      }
+    }
+    @keyframes length {
+      0% {
+        clip-path: inset(0 100% 0 0 round 20px);
+      }
+      100% {
+        clip-path: inset(0 0 0 0 round 20px);
+      }
+    }
   }
 }

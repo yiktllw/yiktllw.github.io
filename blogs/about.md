@@ -76,6 +76,39 @@ bun watch
    - GitHub Actions 会自动触发部署
    - 部署完成后访问 `https://你的用户名.github.io/仓库名`
 
+## 部署到 OSS 静态网页
+
+**没有 OSS 需求时**
+删除 `.github/wordflows/deploy.yml` 文件中以下内容：
+
+```yaml
+- name: Setup aliyun oss
+  uses: manyuanrong/setup-ossutil@v3.0
+  with:
+    endpoint: "oss-cn-hongkong.aliyuncs.com"
+    access-key-id: ${{ secrets.OSS_ID }}
+    access-key-secret: ${{ secrets.OSS_SECRET }}
+
+- name: Clean OSS Bucket
+  run: ossutil rm oss://yikt-net/ -r -f
+
+- name: Deploy docs
+  run: ossutil cp -rf ./dist oss://yikt-net/
+```
+
+**需要 OSS 部署时**
+
+1. 配置参数修改：
+
+```yaml
+endpoint: "你的OSS端点服务器" # 修改 endpoint 值
+access-key-id: ${{ secrets.OSS_ID }} # 保持变量名不变
+access-key-secret: ${{ secrets.OSS_SECRET }} # 保持变量名不变
+run: ossutil cp -rf ./dist oss://你的存储桶名称/ # 替换OSS地址
+```
+
+2. GitHub 仓库中添加 Secrets: `OSS_ID` 和 `OSS_SECRET`
+
 ## 注意事项
 
 1. 保持文件监听服务 (`bun watch`) 持续运行
