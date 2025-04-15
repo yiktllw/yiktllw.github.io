@@ -139,6 +139,7 @@ const vue = `<template>
 </template>
 <script setup lang="ts">
 import { ref, nextTick, onUnmounted } from "vue";
+// @ts-ignore
 import copy_svg from "@/assets/svg/copy.svg";
 import blogs from "@/blogs.json";
 import { formatTime_yyyy_mm_dd_hh_mm } from "@/utils/time";
@@ -230,8 +231,11 @@ nextTick(() => {
 const currentBlog = blogs.find((item) => item.component === "@/blogs/${filename}.vue");
 document.title = currentBlog?.blogInfo.title ?? "yiktllw的博客";
 
+// @ts-ignore
 const codeToCopy = ${JSON.stringify(codeToCopy)};
+// @ts-ignore
 const copyCode = (index: number) => {
+  // @ts-ignore
   const code = codeToCopy[index];
   navigator.clipboard.writeText(code);
 }
@@ -239,6 +243,7 @@ const copyCode = (index: number) => {
 const codeOpen = ref<boolean[]>([
   ${codeToCopy.map((_) => `true`).join(",")}
 ]);
+// @ts-ignore
 const toggleCodeOpen = (index: number) => {
   codeOpen.value[index] = !codeOpen.value[index];
 }

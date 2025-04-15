@@ -352,6 +352,7 @@
 </template>
 <script setup lang="ts">
 import { ref, nextTick, onUnmounted } from "vue";
+// @ts-ignore
 import copy_svg from "@/assets/svg/copy.svg";
 import blogs from "@/blogs.json";
 import { formatTime_yyyy_mm_dd_hh_mm } from "@/utils/time";
@@ -449,16 +450,20 @@ const currentBlog = blogs.find(
 );
 document.title = currentBlog?.blogInfo.title ?? "yiktllw的博客";
 
+// @ts-ignore
 const codeToCopy = [
   "<!-- 逐字歌词动画 -->\n<span\n  class=\"item-white font-color-main\"\n  :style=\"{\n    transition: `clip-path ${(word.duration ?? 0) + (word.startTime ?? line.startTime) > currentTime ? (word.duration ?? 0) / 1000 : 0}s linear, color 0.5s ease`,\n    clipPath:\n      word.startTime <= currentTime ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)',\n    color:\n      index === currentLine\n        ? 'var(--font-color-main)'\n        : 'var(--font-color-standard)',\n  }\"\n>\n  {{ word.text }}\n</span>\n",
   '/** 计算歌词dom和动画 */\nconst computeLyricsElements = () => {\n  // 清空原有的元素和动画\n  // 省略清理代码\n\n  // 生成新的元素，并计算动画\n  animations.value = lyrics.value.flatMap((line, lineIndex) => {\n    const lineKeyframes = [\n      { transform: "scale(1)", opacity: 0 },\n      { transform: "scale(1.3)", opacity: 1 },\n    ];\n    const _lineKeyframes = [\n      { transform: "scale(1)" },\n      { transform: "scale(1.3)" },\n    ];\n    const lineOptions: KeyframeAnimationOptions = {\n      duration: 200,\n      easing: "ease-out",\n      fill: "forwards",\n    };\n\n    // 生成行元素\n    const lineElement = document.createElement("div");\n    lineElement.className = "lyrics-new-line";\n    lineElement.style.transformOrigin = "left center";\n    container.value?.appendChild(lineElement);\n    lineElements.value.push(lineElement);\n\n    // 生成行动画\n    const lineAnimation = lineElement.animate(lineKeyframes, lineOptions);\n    lineAnimation.pause();\n    lineAnimations.value.push(lineAnimation);\n\n    // 生成背景行元素\n    // 生成背景行动画\n    // 生成翻译行元素\n    // 省略部分代码\n\n    // 返回逐字动画\n    return line.words.map((word) => {\n      // 生成逐字元素\n      const wordElement = document.createElement("span");\n      wordElement.innerText = word.text;\n      lineElement.appendChild(wordElement);\n\n      // 生成逐字背景元素\n      // 省略部分代码\n\n      // 生成逐字动画\n      const animateKeyframes = [\n        { clipPath: "inset(0 100% 0 0)" },\n        { clipPath: "inset(0 0 0 0)" },\n      ];\n      const animate = wordElement.animate(animateKeyframes, {\n        duration: word.duration.ms || 1,\n        easing: "linear",\n        fill: "backwards",\n      });\n      animate.pause();\n\n      return animate;\n    });\n  });\n};\n',
 ];
+// @ts-ignore
 const copyCode = (index: number) => {
+  // @ts-ignore
   const code = codeToCopy[index];
   navigator.clipboard.writeText(code);
 };
 
 const codeOpen = ref<boolean[]>([true, true]);
+// @ts-ignore
 const toggleCodeOpen = (index: number) => {
   codeOpen.value[index] = !codeOpen.value[index];
 };

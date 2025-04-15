@@ -307,6 +307,7 @@ git push origin main
 </template>
 <script setup lang="ts">
 import { ref, nextTick, onUnmounted } from "vue";
+// @ts-ignore
 import copy_svg from "@/assets/svg/copy.svg";
 import blogs from "@/blogs.json";
 import { formatTime_yyyy_mm_dd_hh_mm } from "@/utils/time";
@@ -404,6 +405,7 @@ const currentBlog = blogs.find(
 );
 document.title = currentBlog?.blogInfo.title ?? "yiktllw的博客";
 
+// @ts-ignore
 const codeToCopy = [
   "git clone https://github.com/你的用户名/仓库名.git\n",
   "bun add -g vite\n",
@@ -414,7 +416,9 @@ const codeToCopy = [
   '- name: Setup aliyun oss\n  uses: manyuanrong/setup-ossutil@v3.0\n  with:\n    endpoint: "oss-cn-hongkong.aliyuncs.com"\n    access-key-id: ${{ secrets.OSS_ID }}\n    access-key-secret: ${{ secrets.OSS_SECRET }}\n\n- name: Clean OSS Bucket\n  run: ossutil rm oss://yikt-net/ -r -f\n\n- name: Deploy docs\n  run: ossutil cp -rf ./dist oss://yikt-net/\n',
   'endpoint: "你的OSS端点服务器" # 修改 endpoint 值\naccess-key-id: ${{ secrets.OSS_ID }} # 保持变量名不变\naccess-key-secret: ${{ secrets.OSS_SECRET }} # 保持变量名不变\nrun: ossutil cp -rf ./dist oss://你的存储桶名称/ # 替换OSS地址\n',
 ];
+// @ts-ignore
 const copyCode = (index: number) => {
+  // @ts-ignore
   const code = codeToCopy[index];
   navigator.clipboard.writeText(code);
 };
@@ -429,6 +433,7 @@ const codeOpen = ref<boolean[]>([
   true,
   true,
 ]);
+// @ts-ignore
 const toggleCodeOpen = (index: number) => {
   codeOpen.value[index] = !codeOpen.value[index];
 };

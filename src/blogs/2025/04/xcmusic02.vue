@@ -280,6 +280,7 @@
 </template>
 <script setup lang="ts">
 import { ref, nextTick, onUnmounted } from "vue";
+// @ts-ignore
 import copy_svg from "@/assets/svg/copy.svg";
 import blogs from "@/blogs.json";
 import { formatTime_yyyy_mm_dd_hh_mm } from "@/utils/time";
@@ -377,13 +378,17 @@ const currentBlog = blogs.find(
 );
 document.title = currentBlog?.blogInfo.title ?? "yiktllw的博客";
 
+// @ts-ignore
 const codeToCopy = [];
+// @ts-ignore
 const copyCode = (index: number) => {
+  // @ts-ignore
   const code = codeToCopy[index];
   navigator.clipboard.writeText(code);
 };
 
 const codeOpen = ref<boolean[]>([]);
+// @ts-ignore
 const toggleCodeOpen = (index: number) => {
   codeOpen.value[index] = !codeOpen.value[index];
 };
