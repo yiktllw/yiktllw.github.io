@@ -254,6 +254,10 @@ git push origin main
                   )
                 }}
               </span>
+              <span class="word-count">
+                <span class="ele-title">本文字数：</span
+                >{{ currentBlog?.blogInfo.wordCount }}字
+              </span>
               <span class="reading-time">
                 <span class="ele-title">预计阅读时间：</span
                 >{{ currentBlog?.blogInfo.readingTime }}分钟

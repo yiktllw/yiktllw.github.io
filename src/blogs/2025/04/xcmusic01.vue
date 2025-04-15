@@ -125,33 +125,34 @@
         <li>画布大小不灵活,无法动态适应布局改变</li>
       </ol>
       <p>
-        Web Animations Api 可以在 JavaScript 中操控 CSS 动画,
-        解决了初代方案中动画灵活性的问题。
+        Web Animations Api 可以在 JavaScript 中操控 CSS
+        动画，解决了初代方案中动画灵活性的问题。
       </p>
       <p>
-        至于内存占用问题, 在加载 100 句歌词
+        至于内存占用问题，在加载 100 句歌词
         <sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>
-        (带翻译)后, 渲染进程内存占用仅增加了
+        (带翻译)后，渲染进程内存占用仅增加了
         5MB。并且这部分内存是能够稳定得到释放的。
       </p>
       <p>使用 Web Animations Api 完成歌词动画的基本过程为：</p>
       <ol>
         <li>
-          在获取逐字歌词后, 调用
+          在获取逐字歌词后，调用
           <code>computeLyricsElements()</code> 函数：这个函数会完成：
           <ul>
-            <li>生成歌词对应的 dom 元素, 并保存 dom 元素的引用</li>
+            <li>生成歌词对应的 dom 元素，并保存 dom 元素的引用</li>
             <li>为行元素添加行动画(缩放动画)</li>
             <li>为词元素添加从左到右的剪切动画</li>
-            <li>暂停所有动画, 并保存动画的引用</li>
+            <li>暂停所有动画，并保存动画的引用</li>
           </ul>
         </li>
-        <li>同时, 从逐字歌词生成时间线</li>
+        <li>同时，从逐字歌词生成时间线</li>
         <li>
-          使用 <code>requestAnimationFrame()</code> 函数, 在每一帧监听播放进度,
-          并通过时间线计算是否有需要播放的动画
+          使用
+          <code>requestAnimationFrame()</code>
+          函数，在每一帧监听播放进度，并通过时间线计算是否有需要播放的动画
         </li>
-        <li>需要播放动画时, 调用 <code>animate.play()</code> 来播放动画。</li>
+        <li>需要播放动画时，调用 <code>animate.play()</code> 来播放动画。</li>
       </ol>
       <pre><code :data-open="codeOpen[1]" class="hljs language-typescript" style="font-family: yiktllw-code, serif; position: relative;"><div class="line-numbers"><span v-for="i in 64">{{ i }}</span></div><div class="top-line"><div @click="toggleCodeOpen(1)" class="language">&lt;TYPESCRIPT&gt;</div><div class="copy-button" @click="copyCode(1)"><img class="copy-img" :src="copy_svg"/></div></div><div class="code"><span class="hljs-comment">/** 计算歌词dom和动画 */</span>
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">computeLyricsElements</span> = (<span class="hljs-params"></span>) =&gt; {
@@ -224,8 +225,8 @@
           <li id="fn1" class="footnote-item">
             <p>
               <a href="https://music.163.com/song?id=22256832"
-                >贝多芬第九交响曲。富特文格勒 / 1951 年拜罗伊特音乐节,
-                网易云音乐 id: 22256832</a
+                >贝多芬第九交响曲。富特文格勒 / 1951
+                年拜罗伊特音乐节，网易云音乐 id: 22256832</a
               >
               <a href="#fnref1" class="footnote-backref">↩︎</a>
             </p>
@@ -297,6 +298,10 @@
                     currentBlog?.blogInfo.lastUpdate ?? 0,
                   )
                 }}
+              </span>
+              <span class="word-count">
+                <span class="ele-title">本文字数：</span
+                >{{ currentBlog?.blogInfo.wordCount }}字
               </span>
               <span class="reading-time">
                 <span class="ele-title">预计阅读时间：</span

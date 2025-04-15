@@ -84,6 +84,8 @@ window
   transition: background-color var(--animation-time);
 
   .center {
+    display: flex;
+    flex-direction: row;
     .home {
       &::before {
         content: "\f015";

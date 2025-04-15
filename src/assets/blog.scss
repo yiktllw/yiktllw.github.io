@@ -47,7 +47,7 @@ html[data-theme="light"] {
   }
 }
 
-@media (max-width: 1240px) {
+@media (max-width: 1280px) {
   .blog {
     transform: translateX(110px);
   }
@@ -55,6 +55,7 @@ html[data-theme="light"] {
 
 .blog {
   display: flex;
+  position: relative;
   transition: transform 0.3s ease;
   flex-direction: column;
   text-align: left;
@@ -331,4 +332,29 @@ html[data-theme="light"] {
       }
     }
   }
+}
+
+hr.footnotes-sep {
+  width: 100%;
+  border: 0;
+  padding: 2.5rem 0 1rem 0;
+  margin: 0;
+  position: relative;
+}
+
+hr.footnotes-sep::before {
+  position: absolute;
+  // content: "\00A7";
+  content: "参考文献";
+  font-family: serif;
+  padding: 0 0.5rem;
+  line-height: 1px;
+  border: solid var(--color);
+  border-width: 0 min(10vw, 100px);
+  width: fit-content;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.utterances {
+  margin-top: 20px;
 }
