@@ -3,10 +3,11 @@ import { exec } from "child_process";
 import path from "path";
 import fs from "node:fs";
 import readline from "readline";
-import { startServer as startVite } from "./vite";
+import { startServer as startVite, manualHMRTrigger } from "./vite";
 import { colorize, colors } from "./color";
 import { listFiles } from "./tree";
 import { completer as _completer } from "./completer";
+import { promisify } from "node:util";
 
 // 监听路径配置
 const WATCH_PATH = "blogs/";
@@ -28,21 +29,26 @@ function debounce<F extends (...args: any[]) => void>(fn: F, delay = 500) {
   };
 }
 
-const runCommand = (filename: string) => {
+const execAsync = promisify(exec);
+const runCommand = async (filename: string) => {
   console.log(
     colorize(
       `📄 检测到 ${filename}.md 变化，正在执行命令...`,
       colors.fg.yellow,
     ),
   );
-  exec(`bun run scripts/template.ts ${filename}`, (error, stdout, stderr) => {
-    if (error) {
-      console.error(colorize(`执行错误: ${error.message}`, colors.fg.red));
-      return;
-    }
+
+  try {
+    const { stdout, stderr } = await execAsync(
+      `bun run scripts/template.ts ${filename}`,
+    );
     stdout && console.log(colorize(stdout, colors.fg.gray));
     stderr && console.error(colorize(stderr, colors.fg.red));
-  });
+  } catch (error) {
+    console.error(colorize(`执行错误: ${error.message}`, colors.fg.red));
+    if (error.stdout) console.log(colorize(error.stdout, colors.fg.gray));
+    if (error.stderr) console.error(colorize(error.stderr, colors.fg.red));
+  }
 };
 
 const debouncedRun = debounce(runCommand, 300);
@@ -108,7 +114,14 @@ const handleCommand = async (input: string) => {
       }
 
       try {
+        if (args[0].endsWith(".md")) {
+        } else if (path.parse(args[0]).ext === "") {
+          args[0] += ".md";
+        } else {
+          console.log(colorize("文件名必须以 .md 结尾", colors.fg.red));
+        }
         const filePath = path.resolve(WATCH_PATH, args[0]);
+        const relativePath = path.relative(WATCH_PATH, filePath);
         const dirPath = path.dirname(filePath);
         // 递归创建目录
         fs.mkdirSync(dirPath, { recursive: true });
@@ -124,6 +137,10 @@ const handleCommand = async (input: string) => {
           if (error) {
             console.log("VSCode打开失败，请确保已安装并在PATH中添加了code命令");
           }
+        });
+        // 刷新信息
+        runCommand(relativePath.slice(0, -3)).then(() => {
+          manualHMRTrigger(viteProcess);
         });
       } catch (error) {
         console.log(`操作失败: ${error.message}`);

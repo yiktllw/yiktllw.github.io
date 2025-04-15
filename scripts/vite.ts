@@ -1,7 +1,7 @@
 import { createServer } from "vite";
 import type { ViteDevServer } from "vite";
 
-async function manualHMRTrigger(server: ViteDevServer) {
+export async function manualHMRTrigger(server: ViteDevServer) {
   let filePath = process.cwd() + "/src/router/blogRoutes.ts";
   const module = server.moduleGraph.getModulesByFile(filePath);
 
