@@ -16,7 +16,7 @@ const startTime = Date.now();
 hilightjs.registerLanguage("vue", (hljs) => {
   return {
     name: "Vue",
-    subLanguage: "xml", // 基础语言使用HTML
+    subLanguage: "xml",
     contains: [
       {
         begin: /<script(\s*lang\s*=\s*['"]?(ts|typescript)['"]?)?\s*>/,
@@ -100,15 +100,16 @@ const vue = `<template>
       </div>
       <div class="nav-content">
         <div class="article toc active" id="article">
-          <div class="toc-title">目录</div>
-          <div class="progress-bar"/>
-          ${headings_html_str}
+          ${headings_html_str === "" ? "" : `<div class="toc-title">目录</div>\n<div class="progress-bar"/>` + headings_html_str}
           <div class="info">
             <span class="create-time">
               <span class="ele-title">创建于：</span>{{ formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.createTime ?? 0) }}
             </span>
             <span class="last-update">
               <span class="ele-title">修改于：</span>{{ formatTime_yyyy_mm_dd_hh_mm(currentBlog?.blogInfo.lastUpdate ?? 0) }}
+            </span>
+            <span class="word-count">
+              <span class="ele-title">本文字数：</span>{{ currentBlog?.blogInfo.wordCount }}字
             </span>
             <span class="reading-time">
               <span class="ele-title">预计阅读时间：</span>{{ currentBlog?.blogInfo.readingTime }}分钟
@@ -375,11 +376,11 @@ function mergeMetaData(routes: Array<{ component: string }>): BlogMeta[] {
     // 计算字数和阅读时间
     const path =
       route.component.substring(2, route.component.length - 4) + ".md";
-    console.log(path);
     const { wordCount, readingTime } = countMarkdownWords(path);
     // 从md生成摘要
     let abstract = existing?.blogInfo.abstract ?? "";
-    if (abstract === "") abstract = getMarkdownSummary(blog, 200);
+    if (abstract === "" || abstract === "...")
+      abstract = getMarkdownSummary(blog, 200);
 
     return {
       component: route.component,
