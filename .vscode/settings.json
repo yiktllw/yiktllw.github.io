@@ -1,0 +1,9 @@
+{
+  "livePreview.defaultPreviewPath": "/index.html",
+  "json.schemas": [
+    {
+      "fileMatch": ["src/blogs.json"],
+      "url": "./src/utils/blogs_schema.json"
+    }
+  ]
+}

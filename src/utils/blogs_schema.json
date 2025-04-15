@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "component": {
+        "type": "string",
+        "description": "组件路径，以 @/blogs/ 开头的 Vue 文件"
+      },
+      "blogInfo": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "博客标题"
+          },
+          "abstract": {
+            "type": "string",
+            "description": "博客摘要"
+          },
+          "createTime": {
+            "type": "integer",
+            "description": "博客创建时间, UNIX 时间戳, 自动填写"
+          },
+          "lastUpdate": {
+            "type": "integer",
+            "description": "博客修改时间, UNIX 时间戳, 自动更新"
+          },
+          "wordCount": {
+            "type": "integer",
+            "description": "博客字数, 自动填写"
+          },
+          "readingTime": {
+            "type": "integer",
+            "description": "博客阅读时间, 自动填写"
+          },
+          "category": {
+            "type": "string",
+            "description": "博客分类, 默认 default"
+          },
+          "tags": {
+            "type": "array",
+            "description": "博客标签",
+            "items": {
+              "type": "string"
+            }
+          },
+          "series": {
+            "type": "object",
+            "description": "博客系列",
+            "properties": {
+              "enable": {
+                "type": "boolean",
+                "description": "是否启用系列"
+              },
+              "name": {
+                "type": "string",
+                "description": "系列名称"
+              }
+            },
+            "additionalProperties": false,
+            "required": ["enable", "name"]
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "abstract",
+          "createTime",
+          "lastUpdate",
+          "wordCount",
+          "readingTime",
+          "category",
+          "tags",
+          "series"
+        ]
+      }
+    },
+    "additionalProperties": false,
+    "required": ["component", "blogInfo"]
+  }
+}
