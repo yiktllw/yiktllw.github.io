@@ -48,6 +48,15 @@ Tauri 只在后端使用了 Rust，你可以使用任何语言编写前端：使
 
 由此可见，为获得有限的安全提升而抛弃 Electron 的兼容性和生态优势，其性价比值得商榷。
 
+## 核心问题：网易云音乐 API
+
+XCMusic 依赖的 [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) 是基于 NodeJS 的实现。Electron 内置 NodeJS 环境，可直接启动该服务；而在 Tauri 中则面临两难选择：
+
+1. 打包为二进制程序：将增加约 40MB 体积，显著削弱 Tauri 的体积优势
+2. 重写为 Rust 版本：需重构 2w 行 JS 代码，开发成本过高[^rust-ncm-api]
+
+二者均不具备可行性。
+
 ## 结论
 
 对于全新开发的 Windows 桌面应用，采用 Tauri 配合 Rust 前端框架（如 Dioxus/Yew）是值得考虑的方案。
@@ -59,3 +68,5 @@ Tauri 只在后端使用了 Rust，你可以使用任何语言编写前端：使
 [^1]: [GitHub：检测电脑中有多少个 Chromium 内核的程序](https://github.com/xh321/CefDetector.Net)
 
 [^2]: [Tauri 2.0 官方网站](https://v2.tauri.app/)
+
+[^rust-ncm-api]: GitHub 上有将此项目转写为 Rust 的版本，但是其最后更新在 2018 年，提供的 API 很少，可用性不高。

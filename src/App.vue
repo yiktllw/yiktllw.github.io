@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-document.title = import.meta.env.VITE_AUTHOR + "的博客";
 import { useRouter } from "vue-router";
 import Storage from "./utils/localStorage";
 import { nextTick } from "vue";

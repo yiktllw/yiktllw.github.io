@@ -122,6 +122,30 @@
         由此可见，为获得有限的安全提升而抛弃 Electron
         的兼容性和生态优势，其性价比值得商榷。
       </p>
+      <h2
+        id="%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%EF%BC%9A%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90-api"
+        tabindex="-1"
+      >
+        核心问题：网易云音乐 API
+      </h2>
+      <p>
+        XCMusic 依赖的
+        <a href="https://github.com/Binaryify/NeteaseCloudMusicApi"
+          >NeteaseCloudMusicApi</a
+        >
+        是基于 NodeJS 的实现。Electron 内置 NodeJS 环境，可直接启动该服务；而在
+        Tauri 中则面临两难选择：
+      </p>
+      <ol>
+        <li>打包为二进制程序：将增加约 40MB 体积，显著削弱 Tauri 的体积优势</li>
+        <li>
+          重写为 Rust 版本：需重构 2w 行 JS 代码，开发成本过高<sup
+            class="footnote-ref"
+            ><a href="#fn4" id="fnref4">[4]</a></sup
+          >
+        </li>
+      </ol>
+      <p>二者均不具备可行性。</p>
       <h2 id="%E7%BB%93%E8%AE%BA" tabindex="-1">结论</h2>
       <p>
         对于全新开发的 Windows 桌面应用，采用 Tauri 配合 Rust 前端框架（如
@@ -157,6 +181,13 @@
               <a href="#fnref3:1" class="footnote-backref">↩︎</a>
               <a href="#fnref3:2" class="footnote-backref">↩︎</a>
               <a href="#fnref3:3" class="footnote-backref">↩︎</a>
+            </p>
+          </li>
+          <li id="fn4" class="footnote-item">
+            <p>
+              GitHub 上有将此项目转写为 Rust 的版本，但是其最后更新在 2018
+              年，提供的 API 很少，可用性不高。
+              <a href="#fnref4" class="footnote-backref">↩︎</a>
             </p>
           </li>
         </ol>
@@ -204,9 +235,16 @@
               </li>
               <li>
                 <a
-                  href="#%E7%BB%93%E8%AE%BA"
+                  href="#%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%EF%BC%9A%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90-api"
                   :class="3 === current_heading ? 'active' : 'not-active'"
-                  >4&nbsp;结论</a
+                  >4&nbsp;核心问题：网易云音乐 API</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#%E7%BB%93%E8%AE%BA"
+                  :class="4 === current_heading ? 'active' : 'not-active'"
+                  >5&nbsp;结论</a
                 >
               </li>
             </ul>
