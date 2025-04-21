@@ -4,7 +4,7 @@
     "route_path": "/blog/2025_04_xcmusic03",
     "blogInfo": {
       "title": "XCMusic 开发者日志 03：虚拟滚动",
-      "abstract": "...",
+      "abstract": "",
       "createTime": 1745220604401,
       "lastUpdate": 1745220650594,
       "wordCount": 0,
@@ -12,8 +12,8 @@
       "category": "default",
       "tags": ["XCMusic", "开发者日志", "虚拟滚动"],
       "series": {
-        "enable": false,
-        "name": ""
+        "enable": true,
+        "name": "XCMusic开发者日志"
       }
     }
   },
@@ -66,7 +66,7 @@
       "title": "关于 YiktLLW 的个人博客",
       "abstract": "本博客通过 GitHub Actions 从 yiktllw.github.io 仓库自动构建，未采用任何现有博客框架，旨在兼顾 Markdown 的编写便利性与开发自由度。 技术方案如下： 以 Vue 为基础框架 编写 TypeScript 脚本实现： 核心脚本：将 Markdown 解析为 Vue 组件，自动生成路由配置和文章元数据 辅助脚本：实时监听 Markdown 文件变更并同步更新 V...",
       "createTime": 1743614382251,
-      "lastUpdate": 1744961542438,
+      "lastUpdate": 1745222169160,
       "wordCount": 677,
       "readingTime": 3,
       "category": "default",
