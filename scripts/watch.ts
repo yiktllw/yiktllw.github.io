@@ -74,6 +74,9 @@ ${colorize("h", colors.fg.green)}    - 显示帮助信息
 ${colorize("ls", colors.fg.green)}   - 列出所有监听文件
 ${colorize("new <path/to/filename.md>", colors.fg.green)} - 创建新md文件
 ${colorize("r <path/to/filename.md>", colors.fg.green)} - 手动触发md文件处理
+${colorize("r", colors.fg.green)}    - 更新路由和博客元数据
+${colorize("u", colors.fg.green)}    - 显示开发服务器url
+${colorize("o", colors.fg.green)}    - 在浏览器中打开开发服务器
 ${colorize("c", colors.fg.green)}    - 清空控制台
 ${colorize("q", colors.fg.green)}    - 退出程序
 `,
@@ -148,12 +151,15 @@ const handleCommand = async (input: string) => {
       break;
 
     case "o":
+      viteProcess.openBrowser();
       break;
     case "u":
+      viteProcess.printUrls();
       break;
 
     case "r":
       if (!args.length) {
+        manualHMRTrigger(viteProcess);
         return;
       }
       const filename = args[0].replace(/\.md$/i, "");

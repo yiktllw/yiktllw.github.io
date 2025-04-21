@@ -309,18 +309,18 @@ function generateRoutes() {
 
 const blogRoutes = generateRoutes();
 
-const routes_arr = blogRoutes
-  .map((route) => {
-    const filename = route.component
-      .slice(8, -4)
-      .replace(/\//g, "_")
-      .replace(/\\/g, "_");
-    return `  {\n    path: "/blog/${filename}",\n    component: () => import('${route.component}')\n  }`;
-  })
-  .join(",\n");
-const blogRoutesStr = "export const blogRoutes = [\n" + routes_arr + "\n]";
+// const routes_arr = blogRoutes
+//   .map((route) => {
+//     const filename = route.component
+//       .slice(8, -4)
+//       .replace(/\//g, "_")
+//       .replace(/\\/g, "_");
+//     return `  {\n    path: "/blog/${filename}",\n    component: () => import('${route.component}')\n  }`;
+//   })
+//   .join(",\n");
+// const blogRoutesStr = "export const blogRoutes = [\n" + routes_arr + "\n]";
 
-fs.writeFileSync("src/router/blogRoutes.ts", blogRoutesStr, "utf-8");
+// fs.writeFileSync("src/router/blogRoutes.ts", blogRoutesStr, "utf-8");
 
 /*******************************
  * 生成元数据
@@ -330,6 +330,8 @@ const META_FILE = "src/blogs.json";
 type BlogMeta = {
   /** 组件路径 */
   component: string;
+  /** 路由路径 */
+  route_path: string;
   blogInfo: {
     /** 标题 */
     title: string;
@@ -372,43 +374,59 @@ function mergeMetaData(routes: Array<{ component: string }>): BlogMeta[] {
   const now = Date.now();
   const existingData = getMetaData();
 
-  return routes.map((route) => {
-    const isCurrent =
-      filename === route.component.slice(8, -4) ||
-      filename === route.component.slice(8, -4) + ".md";
-    // 查找已有记录
-    const existing = existingData.find((m) => m.component === route.component);
-    // 计算字数和阅读时间
-    const path =
-      route.component.substring(2, route.component.length - 4) + ".md";
-    const { wordCount, readingTime } = countMarkdownWords(path);
-    // 从md生成摘要
-    let abstract = existing?.blogInfo.abstract ?? "";
-    if (abstract === "" || abstract === "...")
-      abstract = getMarkdownSummary(blog, 200);
+  return routes
+    .map((route) => {
+      const isCurrent =
+        filename === route.component.slice(8, -4) ||
+        filename === route.component.slice(8, -4) + ".md";
 
-    return {
-      component: route.component,
-      blogInfo: {
-        title: existing?.blogInfo.title || "", // 保留已有标题或初始化
-        abstract,
-        createTime: existing?.blogInfo.createTime || now, // 已有值或新时间戳
-        lastUpdate: isCurrent ? now : (existing?.blogInfo.lastUpdate ?? now),
-        wordCount: wordCount,
-        readingTime: readingTime,
-        category: existing?.blogInfo.category || "default", // 默认分类
-        tags: existing?.blogInfo.tags || [],
-        series: {
-          enable: existing?.blogInfo.series.enable || false,
-          name: existing?.blogInfo.series.name || "",
+      // 查找已有记录
+      const existing = existingData.find(
+        (m) => m.component === route.component,
+      );
+      const path =
+        route.component.substring(2, route.component.length - 4) + ".md";
+
+      const _filename = route.component
+        .slice(8, -4)
+        .replace(/\//g, "_")
+        .replace(/\\/g, "_");
+      const route_path = `/blog/${_filename}`;
+
+      // 计算字数和阅读时间
+      const { wordCount, readingTime } = countMarkdownWords(path);
+
+      // 从md生成摘要
+      let abstract = existing?.blogInfo.abstract ?? "";
+      if (abstract === "" || abstract === "...")
+        abstract = getMarkdownSummary(blog, 200);
+
+      return {
+        component: route.component,
+        route_path,
+        blogInfo: {
+          title: existing?.blogInfo.title || "", // 保留已有标题或初始化
+          abstract,
+          createTime: existing?.blogInfo.createTime || now, // 已有值或新时间戳
+          lastUpdate: isCurrent ? now : (existing?.blogInfo.lastUpdate ?? now),
+          wordCount: wordCount,
+          readingTime: readingTime,
+          category: existing?.blogInfo.category || "default", // 默认分类
+          tags: existing?.blogInfo.tags || [],
+          series: {
+            enable: existing?.blogInfo.series.enable || false,
+            name: existing?.blogInfo.series.name || "",
+          },
         },
-      },
-    };
-  });
+      };
+    })
+    .sort((a, b) => b.blogInfo.createTime - a.blogInfo.createTime);
 }
 
 // 执行合并并写入文件
-const mergedData = mergeMetaData(blogRoutes);
+const mergedData = mergeMetaData(blogRoutes).sort(
+  (a, b) => b.blogInfo.createTime - a.blogInfo.createTime,
+);
 fs.writeFileSync(META_FILE, JSON.stringify(mergedData, null, 2), "utf-8");
 
 console.log(`✅ 成功更新 ${mergedData.length} 条元数据到 ${META_FILE}`);

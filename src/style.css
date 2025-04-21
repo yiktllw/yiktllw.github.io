@@ -16,6 +16,7 @@ html {
 
   --animation-time: 0.3s;
   --color: rgba(255, 255, 255, 0.87);
+  --secondary-color: rgba(255, 255, 255, 0.65);
   --bg-color: #242424;
   --a-color: #646cff;
   --a-hover-color: #535bf2;
@@ -32,6 +33,7 @@ html {
 [data-theme="dark"] {
   --icon-invert: invert(0);
   --color: rgba(255, 255, 255, 0.87);
+  --secondary-color: rgba(255, 255, 255, 0.65);
   --bg-color: #242424;
   --top-bg-color: #202020;
   --a-color: #646cff;
@@ -44,6 +46,7 @@ html {
 [data-theme="light"] {
   --icon-invert: invert(1);
   --color: #000;
+  --secondary-color: rgba(0, 0, 0, 0.64);
   --bg-color: white;
   --top-bg-color: #e8e8e8;
   --a-color: #747bff;

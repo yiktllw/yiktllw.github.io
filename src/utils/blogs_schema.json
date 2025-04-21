@@ -8,6 +8,10 @@
         "type": "string",
         "description": "组件路径，以 @/blogs/ 开头的 Vue 文件"
       },
+      "route_path": {
+        "type": "string",
+        "description": "路由路径，自动生成"
+      },
       "blogInfo": {
         "type": "object",
         "properties": {
@@ -78,6 +82,6 @@
       }
     },
     "additionalProperties": false,
-    "required": ["component", "blogInfo"]
+    "required": ["component", "route_path", "blogInfo"]
   }
 }

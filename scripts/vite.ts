@@ -2,7 +2,7 @@ import { createServer } from "vite";
 import type { ViteDevServer } from "vite";
 
 export async function manualHMRTrigger(server: ViteDevServer) {
-  let filePath = process.cwd() + "/src/router/blogRoutes.ts";
+  let filePath = process.cwd() + "/src/blogs.json";
   const module = server.moduleGraph.getModulesByFile(filePath);
 
   if (module) {
@@ -37,23 +37,36 @@ export async function startServer() {
   });
 
   await server.listen();
-  server.bindCLIShortcuts({
-    print: true,
-    customShortcuts: [
-      {
-        key: "c",
-        description: "Disabled",
-        action: undefined,
-      },
-      {
-        key: "r",
-        description: "reload vue router",
-        action: (_server) => {
-          manualHMRTrigger(_server);
-        },
-      },
-    ],
-  });
+  // server.bindCLIShortcuts({
+  //   print: true,
+  //   customShortcuts: [
+  //     {
+  //       key: "c",
+  //       description: "Disabled",
+  //       action: undefined,
+  //     },
+  //     {
+  //       key: "r",
+  //       description: "Disabled",
+  //       action: undefined,
+  //     },
+  //     {
+  //       key: "u",
+  //       description: "Disabled",
+  //       action: undefined,
+  //     },
+  //     {
+  //       key: "o",
+  //       description: "Disabled",
+  //       action: undefined,
+  //     },
+  //     {
+  //       key: "q",
+  //       description: "Disabled",
+  //       action: undefined,
+  //     },
+  //   ],
+  // });
   server.printUrls();
   return server;
 }

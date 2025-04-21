@@ -1,7 +1,15 @@
 import { createWebHistory, createRouter } from "vue-router";
-import { blogRoutes } from "./blogRoutes";
+import blogs from "../blogs.json";
 import Nprogress from "nprogress";
 import HomeView from "@/views/HomeView.vue";
+
+const blogRoutes = blogs.map((blog) => {
+  return {
+    component: () =>
+      import(/* @vite-ignore */ blog.component.replace("@/", "/src/")),
+    path: blog.route_path,
+  };
+});
 
 const routes = [{ path: "/", component: HomeView }, ...blogRoutes];
 

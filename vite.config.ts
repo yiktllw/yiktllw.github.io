@@ -12,7 +12,7 @@ export default defineConfig({
   },
   server: {
     watch: {
-      ignored: ["**/src/router/blogRoutes.ts"],
+      ignored: ["**/src/blogs.json"],
     },
   },
 });
