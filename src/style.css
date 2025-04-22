@@ -1,61 +1,3 @@
-html {
-  overflow-y: scroll;
-  font-size: 17.5px;
-  @media (max-width: 600px) {
-    font-size: 14px;
-  }
-  scroll-timeline: --scrollTimeline y;
-  scroll-timeline: --scrollTimeline vertical;
-}
-:root {
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  line-height: 1.5;
-  font-weight: 400;
-
-  --animation-time: 0.3s;
-  --color: rgba(255, 255, 255, 0.87);
-  --secondary-color: rgba(255, 255, 255, 0.65);
-  --bg-color: #242424;
-  --a-color: #646cff;
-  --a-hover-color: #535bf2;
-  --btn-bg-color: #242424;
-  --code-bg-color: #131313;
-  --border-secondary: rgba(255, 255, 255, 0.3);
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-[data-theme="dark"] {
-  --icon-invert: invert(0);
-  --color: rgba(255, 255, 255, 0.87);
-  --secondary-color: rgba(255, 255, 255, 0.65);
-  --bg-color: #242424;
-  --top-bg-color: #202020;
-  --a-color: #646cff;
-  --a-hover-color: #535bf2;
-  --btn-bg-color: transparent;
-  --code-bg-color: #131313;
-  --border-secondary: rgba(255, 255, 255, 0.3);
-}
-
-[data-theme="light"] {
-  --icon-invert: invert(1);
-  --color: #000;
-  --secondary-color: rgba(0, 0, 0, 0.64);
-  --bg-color: white;
-  --top-bg-color: #e8e8e8;
-  --a-color: #747bff;
-  --a-hover-color: #535bf2;
-  --btn-bg-color: transparent;
-  --code-bg-color: #f6f8f3;
-  --border-secondary: rgba(0, 0, 0, 0.3);
-}
-
 kbd {
   border: 2px solid var(--border-secondary);
   border-radius: 5px;
@@ -76,16 +18,6 @@ a {
 }
 a:hover {
   color: var(--a-hover-color);
-}
-
-body {
-  background-color: var(--bg-color);
-  color: var(--color);
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {

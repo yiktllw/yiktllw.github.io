@@ -1,5 +1,4 @@
 import { createWebHistory, createRouter } from "vue-router";
-// import blogs from "../blogs.json";
 import { blogRoutes } from "./blogRoutes";
 import Nprogress from "nprogress";
 import HomeView from "@/views/HomeView.vue";
