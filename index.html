@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -8,12 +8,115 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css"
     />
+    <style>
+      html {
+        overflow-y: scroll;
+        font-size: 17.5px;
+        @media (max-width: 600px) {
+          font-size: 14px;
+        }
+        scroll-timeline: --scrollTimeline y;
+        scroll-timeline: --scrollTimeline vertical;
+      }
+      :root {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+          sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        line-height: 1.5;
+        font-weight: 400;
+
+        --animation-time: 0.3s;
+        --color: rgba(255, 255, 255, 0.87);
+        --secondary-color: rgba(255, 255, 255, 0.65);
+        --bg-color: #242424;
+        --a-color: #646cff;
+        --a-hover-color: #535bf2;
+        --btn-bg-color: #242424;
+        --code-bg-color: #131313;
+        --border-secondary: rgba(255, 255, 255, 0.3);
+
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      [data-theme="dark"] {
+        --icon-invert: invert(0);
+        --color: rgba(255, 255, 255, 0.87);
+        --secondary-color: rgba(255, 255, 255, 0.65);
+        --bg-color: #242424;
+        --top-bg-color: #202020;
+        --a-color: #646cff;
+        --a-hover-color: #535bf2;
+        --btn-bg-color: transparent;
+        --code-bg-color: #131313;
+        --border-secondary: rgba(255, 255, 255, 0.3);
+      }
+
+      [data-theme="light"] {
+        --icon-invert: invert(1);
+        --color: #000;
+        --secondary-color: rgba(0, 0, 0, 0.64);
+        --bg-color: white;
+        --top-bg-color: #e8e8e8;
+        --a-color: #747bff;
+        --a-hover-color: #535bf2;
+        --btn-bg-color: transparent;
+        --code-bg-color: #f6f8f3;
+        --border-secondary: rgba(0, 0, 0, 0.3);
+      }
+      body {
+        background-color: var(--bg-color);
+        color: var(--color);
+        margin: 0;
+        display: flex;
+        place-items: center;
+        min-width: 320px;
+        min-height: 100vh;
+      }
+      #live2dcanvas {
+        border: 0 !important;
+      }
+    </style>
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
     ></script>
-    <script type="module" crossorigin src="/assets/index-Db6z3kid.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-2LpnQLps.css">
+    <script type="text/javascript">
+      const live2dScript = document.createElement("script");
+      live2dScript.src =
+        "https://cdn.jsdelivr.net/npm/live2d-widget@3.0.4/lib/L2Dwidget.min.js";
+      live2dScript.charset = "utf-8";
+      live2dScript.onload = function () {
+        const wanko =
+          "https://unpkg.com/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json";
+        L2Dwidget.init({
+          model: {
+            jsonPath: wanko,
+            scale: 0.5,
+          },
+          display: {
+            position: "left",
+            width: 120,
+            height: 125,
+            hOffset: -20,
+            vOffset: -20,
+          },
+          mobile: {
+            show: true,
+            scale: 0.5,
+          },
+          react: {
+            opacityDefault: 0.7,
+            opacityOnHover: 0.2,
+          },
+        });
+      };
+      document.head.appendChild(live2dScript);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CF8yaTAO.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DMDS0Fn_.css">
   </head>
   <body>
     <div id="app"></div>
