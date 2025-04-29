@@ -11,11 +11,13 @@
   <div class="app">
     <RouterView />
   </div>
+  <ARONA />
 </template>
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import Storage from "./utils/localStorage";
+import ARONA from "./components/arona.vue";
 import { nextTick } from "vue";
 
 const router = useRouter();

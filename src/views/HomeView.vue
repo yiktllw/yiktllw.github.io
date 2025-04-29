@@ -44,9 +44,9 @@ document.title = (import.meta.env.VITE_AUTHOR || "无名") + "的博客";
     border-radius: 10px;
     margin: 10px 0 25px 0;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    // transition: transform 0.2s ease;
+    transition: transform 0.2s ease;
     &:hover {
-      // transform: translateY(-2px);
+      transform: scale(1.02);
     }
     .title {
       font-size: 1.2rem;
@@ -64,6 +64,13 @@ document.title = (import.meta.env.VITE_AUTHOR || "无名") + "的博客";
       }
     }
     .abstract {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      text-overflow: ellipsis;
+
       font-size: 0.9rem;
       line-height: 1.4rem;
       color: var(--secondary-color);
