@@ -83,40 +83,9 @@
       defer
       src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
     ></script>
-    <script type="text/javascript">
-      const live2dScript = document.createElement("script");
-      live2dScript.src =
-        "https://cdn.jsdelivr.net/npm/live2d-widget@3.0.4/lib/L2Dwidget.min.js";
-      live2dScript.charset = "utf-8";
-      live2dScript.onload = function () {
-        const wanko =
-          "https://unpkg.com/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json";
-        L2Dwidget.init({
-          model: {
-            jsonPath: wanko,
-            scale: 0.5,
-          },
-          display: {
-            position: "left",
-            width: 120,
-            height: 125,
-            hOffset: -20,
-            vOffset: -20,
-          },
-          mobile: {
-            show: true,
-            scale: 0.5,
-          },
-          react: {
-            opacityDefault: 0.7,
-            opacityOnHover: 0.2,
-          },
-        });
-      };
-      document.head.appendChild(live2dScript);
-    </script>
-    <script type="module" crossorigin src="/assets/index-CF8yaTAO.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DMDS0Fn_.css">
+    <link rel="stylesheet" href="/arona/spine-player.css">
+    <script type="module" crossorigin src="/assets/index-DBRjhJB0.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-7tdWg5gM.css">
   </head>
   <body>
     <div id="app"></div>
