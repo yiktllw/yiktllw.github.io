@@ -9,10 +9,11 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import arona_animations from "./arona/animations.json";
 import { spine } from "./arona/spine-player.js";
+import * as tensor from "@/utils/tensor";
 
 const playerContainer = ref<HTMLElement | null>(null);
 const playerInstance = ref<spine.SpinePlayer | null>(null);
-const doNotBlink = ref(false);
+const doNotBlink = ref(true);
 const resetBonesState = ref<() => void>(() => {});
 let blinkInterval: ReturnType<typeof setTimeout> | null = null;
 let moveBonesHandler: (event: MouseEvent) => void = () => {};
@@ -25,6 +26,18 @@ const arona = {
   backHeadBone: "Head_Back",
   eyeRotationAngle: 76.307,
 };
+// @ts-ignore
+let rotateMatrix: tensor.Matrix2;
+(function () {
+  const headAngle = 80;
+  const angle = (headAngle - 90) * (Math.PI / 180);
+  rotateMatrix = new tensor.Matrix2(
+    Math.cos(angle),
+    -Math.sin(angle),
+    Math.sin(angle),
+    Math.cos(angle),
+  ).inverse();
+})();
 
 const get_arona_animation = (key: keyof typeof arona_animations) => {
   return arona_animations[key];
@@ -80,7 +93,7 @@ onMounted(() => {
   playerInstance.value = new spine.SpinePlayer(playerContainer.value!, {
     skelUrl: assets.arona.skelUrl,
     atlasUrl: assets.arona.atlasUrl,
-    showControls: false,
+    // showControls: false,
     premultipliedAlpha: true,
     backgroundColor: "#00000000",
     alpha: true,
@@ -117,8 +130,8 @@ onMounted(() => {
 
       // 骨骼移动限制
       const maxRadius = 15;
-      const frontHeadMaxRadius = 2;
-      const backHeadMaxRadius = 1;
+      // const frontHeadMaxRadius = 2;
+      // const backHeadMaxRadius = 1;
 
       function rotateVector(x: number, y: number, angle: number) {
         const cos = Math.cos(angle);
@@ -160,25 +173,39 @@ onMounted(() => {
           leftEyeBone.y = leftEyeCenterY + dy;
         }
 
-        // 头部轻微移动
-        const frontHeadDx =
-          Math.min(distance, frontHeadMaxRadius) * Math.cos(angle);
-        const frontHeadDy =
-          Math.min(distance, frontHeadMaxRadius) * Math.sin(angle);
+        // const maxHeadDistanceHorizontal = 10;
+        // const maxHeadDistanceVertical = 5;
+        // const headDistanceFactorX = 0.05;
+        // const headDistanceFactorY = 0.025;
 
-        const backHeadDx =
-          Math.min(distance, backHeadMaxRadius) * Math.cos(angle);
-        const backHeadDy =
-          Math.min(distance, backHeadMaxRadius) * Math.sin(angle);
+        // const _head_dx = Math.min(maxHeadDistanceHorizontal, Math.abs(mouseX * headDistanceFactorX)) * Math.sign(offsetX);
+        // const _head_dy = Math.min(maxHeadDistanceVertical, Math.abs(mouseY * headDistanceFactorY)) * Math.sign(offsetY);
+
+        // const _frontHeadVector = new tensor.Vector2(_head_dx, _head_dy);
+        // const frontHeadVector = rotateMatrix.apply(_frontHeadVector);
+        // const frontHeadDx = frontHeadVector.x;
+        // const frontHeadDy = frontHeadVector.y;
+        // const backHeadDx = -frontHeadVector.x * 0.8;
+        // const backHeadDy = -frontHeadVector.y * 0.8;
+        // const frontHeadDx =
+        //   Math.min(distance, frontHeadMaxRadius) * Math.cos(angle);
+        // const frontHeadDy =
+        //   Math.min(distance, frontHeadMaxRadius) * Math.sin(angle);
+
+        // const backHeadDx =
+        //   Math.min(distance, backHeadMaxRadius) * Math.cos(angle);
+        // const backHeadDy =
+        //   Math.min(distance, backHeadMaxRadius) * Math.sin(angle);
 
         if (frontHeadBone) {
-          frontHeadBone.x = frontHeadCenterX - frontHeadDx;
-          frontHeadBone.y = frontHeadCenterY + frontHeadDy;
+          // 骨骼的x，y与通常的x，y坐标系相反
+          // frontHeadBone.y = frontHeadCenterY + frontHeadDx;
+          // frontHeadBone.x = frontHeadCenterX + frontHeadDy;
         }
 
         if (backHeadBone) {
-          backHeadBone.x = backHeadCenterX + backHeadDx;
-          backHeadBone.y = backHeadCenterY - backHeadDy;
+          // backHeadBone.x = backHeadCenterX + backHeadDx;
+          // backHeadBone.y = backHeadCenterY + backHeadDy;
         }
 
         skeleton.updateWorldTransform();

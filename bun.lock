@@ -4,6 +4,7 @@
     "": {
       "name": "vite-project",
       "dependencies": {
+        "@esotericsoftware/spine-player": "4.2.40",
         "nprogress": "^0.2.0",
         "pixi-spine": "^4.0.6",
         "pixi.js": "7",
@@ -115,6 +116,12 @@
     "@eslint/object-schema": ["@eslint/object-schema@2.1.6", "", {}, "sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA=="],
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.2.8", "", { "dependencies": { "@eslint/core": "^0.13.0", "levn": "^0.4.1" } }, "sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA=="],
+
+    "@esotericsoftware/spine-core": ["@esotericsoftware/spine-core@4.2.40", "", {}, "sha512-X+wlVw5ilMcSOTqzN+LcpZXlITxOqNQej59G6C5YZlGMlCjwaICTObRnF1bcKJbn198RylvvxAPxmqYzybDkdQ=="],
+
+    "@esotericsoftware/spine-player": ["@esotericsoftware/spine-player@4.2.40", "", { "dependencies": { "@esotericsoftware/spine-webgl": "4.2.40" } }, "sha512-Nw2o5y8RHbfc59xBaeJ7rx85dAeXEGT8iBaCVFgHphROMY3TXRZdy8PQsLU16YubhsWBkPEFfDIRFSKvt3Vhsw=="],
+
+    "@esotericsoftware/spine-webgl": ["@esotericsoftware/spine-webgl@4.2.40", "", { "dependencies": { "@esotericsoftware/spine-core": "4.2.40" } }, "sha512-oraRnXMEtovnXSMhfwfBXFpeHwWH1QLjpVS8c4wXZSYV3IRiNn8BKvQ+0fsYd0/n5oisUa+jym04SHsMCvlfmw=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 

@@ -3,7 +3,14 @@ import { blogRoutes } from "./blogRoutes";
 import Nprogress from "nprogress";
 import HomeView from "@/views/HomeView.vue";
 
-const routes = [{ path: "/", component: HomeView }, ...blogRoutes];
+const routes = [
+  { path: "/", component: HomeView },
+  {
+    path: "/arona_workpage",
+    component: () => import("@/components/arona_workpage.vue"),
+  },
+  ...blogRoutes,
+];
 
 export const router = createRouter({
   history: createWebHistory(),
