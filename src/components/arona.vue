@@ -15,10 +15,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from "vue";
-import arona_animations from "./arona/animations.json";
+import { ref, onMounted, onUnmounted } from "vue";
+import {
+  get_message,
+  get_arona_animation,
+  type AronaMessage,
+} from "./arona/interactions";
 import { spine } from "./arona/spine-player.js";
-import { stagger, waapi } from "animejs";
 
 const playerContainer = ref<HTMLElement | null>(null);
 const playerInstance = ref<spine.SpinePlayer | null>(null);
@@ -91,134 +94,8 @@ const handleMouseUp = (_event: MouseEvent) => {
   playerInstance.value?.animationState.setEmptyAnimation(1, 0.1);
 };
 
-interface AronaMessage {
-  time_seconds: number;
-  html: string;
-  animation: {
-    name: string;
-    trackIndex: number;
-    loop: boolean;
-  };
-  maybe_next_index?: number;
-  maybe_next_condition?: boolean;
-}
 const arona_say = () => {
   if (showDialog.value) return;
-
-  // 模拟 10 连抽卡
-  const simulation = () => {
-    let all_blue = true;
-    // 抽卡概率
-    const special_possibility = 0.007;
-    const purple_possibility = 0.023;
-    const gold_possibility = 0.185;
-    // 抽卡函数
-    const roll = () => {
-      let result = Math.random();
-      if (result < special_possibility) {
-        return 3;
-      } else if (result < special_possibility + purple_possibility) {
-        return 2;
-      } else if (
-        result <
-        special_possibility + purple_possibility + gold_possibility
-      ) {
-        return 1;
-      } else {
-        return 0;
-      }
-    };
-
-    // 10次抽奖
-    let message = "邦邦咔邦，sensei 获得了<br>";
-    const blue_card = `<span class="simulate-card card-blue">📘</span>`;
-    const gold_card = `<span class="simulate-card card-gold">📘</span>`;
-    const purple_card = `<span class="simulate-card card-purple"/>📘</span>`;
-    const special_card = `<span class="simulate-card card-special"/>📘</span>`;
-
-    for (let i = 0; i < 10; i++) {
-      if (i === 5) message += "<br>";
-      switch (roll()) {
-        case 0:
-          if (all_blue && i === 9) message += gold_card;
-          else message += blue_card;
-          break;
-        case 1:
-          all_blue = false;
-          message += gold_card;
-          break;
-        case 2:
-          all_blue = false;
-          message += purple_card;
-          break;
-        case 3:
-          all_blue = false;
-          message += special_card;
-          break;
-      }
-    }
-
-    // 抽卡动画
-    nextTick(() => {
-      setTimeout(() => {
-        const targets = document.querySelectorAll(".simulate-card");
-        waapi.animate(targets, {
-          opacity: 1,
-          delay: stagger(150, { start: 300 }),
-        });
-      }, 100);
-    });
-    return {
-      html: message,
-      maybe_next_index: 1,
-      maybe_next_condition: all_blue,
-    };
-  };
-
-  function get_message(index?: number) {
-    const messages: Array<() => AronaMessage> = [
-      () => ({
-        time_seconds: 4.5,
-        ...simulation(),
-        animation: {
-          name: get_arona_animation("12"),
-          trackIndex: 2,
-          loop: true,
-        },
-      }),
-      () => ({
-        time_seconds: 3.5,
-        html: "啊哈哈... 九蓝一金什么的，阿洛娜不知道哦~",
-        animation: {
-          name: get_arona_animation("28"),
-          trackIndex: 2,
-          loop: true,
-        },
-      }),
-      () => ({
-        time_seconds: 3,
-        html: "唔，草莓牛奶……<br>嘿嘿嘿",
-        animation: {
-          name: get_arona_animation("25"),
-          trackIndex: 2,
-          loop: true,
-        },
-      }),
-    ];
-    const randomInt = (max: number) => {
-      if (index !== undefined) return index;
-      return Math.floor(Math.random() * max);
-    };
-    const randomIndex = randomInt(messages.length);
-    const _next = messages[randomIndex]().maybe_next_index;
-    return {
-      message: messages[randomIndex](),
-      next:
-        _next !== undefined && messages[randomIndex]().maybe_next_condition
-          ? [messages[_next]()]
-          : [],
-    };
-  }
 
   // 输出消息
   const { message, next } = get_message();
@@ -281,11 +158,6 @@ const arona = {
   backHeadBone: "Head_Back",
   eyeRotationAngle: 76.307,
 };
-
-const get_arona_animation = (key: keyof typeof arona_animations) => {
-  return arona_animations[key];
-};
-get_arona_animation("00");
 
 const assets = {
   arona: {
